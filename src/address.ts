@@ -5,7 +5,7 @@ import ripemd160 from "ripemd160";
 const MAIN_NET_PREFIX = "00";
 const TEST_NET_PREFIX = "6F";
 
-export const toAddress = (pubKey, isTestnet) => {
+export const toAddress = (pubKey: Uint8Array, isTestnet?: boolean) => {
   const prefix = isTestnet ? TEST_NET_PREFIX : MAIN_NET_PREFIX;
   const base = sha256(Buffer.from(pubKey));
 

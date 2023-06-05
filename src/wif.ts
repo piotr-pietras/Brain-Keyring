@@ -5,7 +5,7 @@ import { Buffer } from "buffer";
 const MAIN_NET_PREFIX = "80";
 const TEST_NET_PREFIX = "EF";
 
-export const toWif = (privKey, isTestnet) => {
+export const toWif = (privKey: Uint8Array, isTestnet?: boolean) => {
   const prefix = isTestnet ? TEST_NET_PREFIX : MAIN_NET_PREFIX;
   const privKeyPrefixed = Buffer.concat([Buffer.from(prefix, "hex"), privKey]);
 
@@ -15,3 +15,4 @@ export const toWif = (privKey, isTestnet) => {
   const wif = bs58.encode(privateKeyChecksum);
   return wif;
 };
+
