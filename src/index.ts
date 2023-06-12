@@ -1,10 +1,10 @@
-import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex as toHex } from "@noble/hashes/utils";
-import { getPublicKey } from "@noble/secp256k1";
-import { toWif } from "./wif.js";
-import { toAddress } from "./address.js";
+import { toWif } from "./crypto/wif.js";
+import { toAddress } from "./crypto/address.js";
 import { addressBalanceReq } from "./https.js";
 import { env } from "./env.js";
+import { phraseToPrivKey } from "./crypto/privKey.js";
+import { toPubKey } from "./crypto/pubKey.js";
 
 process.stdout.write("CRYPTO-KEYRING" + "\n");
 process.stdout.write("type passphrase..." + "\n");
@@ -13,9 +13,9 @@ process.stdin.on("data", async (input) => {
   const isTestnet = env.net === "TEST_NET";
   const phrase = input.toString().slice(0, input.length - 1);
 
-  const privKey = sha256(phrase);
+  const privKey = phraseToPrivKey(phrase);
   const wif = toWif(privKey, isTestnet);
-  const pubKey = getPublicKey(privKey, false);
+  const pubKey = toPubKey(privKey, false);
   const address = toAddress(pubKey, isTestnet);
   const addressInfo = await addressBalanceReq(address);
 
