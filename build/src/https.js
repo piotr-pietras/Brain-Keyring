@@ -1,13 +1,9 @@
 import https from "https";
 import { env } from "./env.js";
+const HOST = { host: "api.blockcypher.com", port: 443 };
 const net = env.net === "MAIN_NET" ? "main" : "test3";
 export const addressBalanceReq = (address) => new Promise((resolver, reject) => {
-    const req = https.request({
-        host: "api.blockcypher.com",
-        port: 443,
-        path: `/v1/btc/${net}/addrs/${address}/balance?token=${env.apiToken}`,
-        method: "GET",
-    }, (res) => {
+    const req = https.request(Object.assign(Object.assign({}, HOST), { path: `/v1/btc/${net}/addrs/${address}/balance?token=${env.apiToken}`, method: "GET" }), (res) => {
         res.on("data", (chunk) => {
             const obj = JSON.parse(chunk.toString());
             resolver({
@@ -17,6 +13,9 @@ export const addressBalanceReq = (address) => new Promise((resolver, reject) => 
             });
         });
     });
-    req.on("error", (err) => reject("Error..."));
+    req.on("error", (err) => {
+        console.log(err);
+        reject("Error...");
+    });
     req.end();
 });

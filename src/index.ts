@@ -1,10 +1,11 @@
 import { bytesToHex as toHex } from "@noble/hashes/utils";
 import { toWif } from "./crypto/wif.js";
 import { toAddress } from "./crypto/address.js";
-import { addressBalanceReq } from "./https.js";
+import { addressBalanceReq } from "./api/address/balance.api.js";
 import { env } from "./env.js";
 import { phraseToPrivKey } from "./crypto/privKey.js";
 import { toPubKey } from "./crypto/pubKey.js";
+import { Transaction } from "./api/transaction/Transaction.js";
 
 process.stdout.write("CRYPTO-KEYRING" + "\n");
 process.stdout.write("type passphrase..." + "\n");
@@ -18,6 +19,19 @@ process.stdin.on("data", async (input) => {
   const pubKey = toPubKey(privKey, false);
   const address = toAddress(pubKey, isTestnet);
   const addressInfo = await addressBalanceReq(address);
+
+  const transaction = new Transaction({
+    inputAddress: "n3GgbqMvS3rYdu5VHhjDN3Cfxtobpeqsnj",
+    outputAddress: "mwqncWSnzUzouPZcLQWcLTPuSVq3rSiAAa",
+    value: 10000,
+  });
+  try {
+    await transaction.create();
+    transaction.sign(pubKey, privKey);
+    await transaction.send();
+  } catch (error) {
+    console.log(error);
+  }
 
   process.stdout.write("Private Key: ");
   process.stdout.write(toHex(privKey) + "\n");

@@ -10,10 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { bytesToHex as toHex } from "@noble/hashes/utils";
 import { toWif } from "./crypto/wif.js";
 import { toAddress } from "./crypto/address.js";
-import { addressBalanceReq } from "./https.js";
+import { addressBalanceReq } from "./api/address/balance.api.js";
 import { env } from "./env.js";
 import { phraseToPrivKey } from "./crypto/privKey.js";
 import { toPubKey } from "./crypto/pubKey.js";
+import { Transaction } from "./api/transaction/Transaction.js";
 process.stdout.write("CRYPTO-KEYRING" + "\n");
 process.stdout.write("type passphrase..." + "\n");
 process.stdin.on("data", (input) => __awaiter(void 0, void 0, void 0, function* () {
@@ -24,6 +25,19 @@ process.stdin.on("data", (input) => __awaiter(void 0, void 0, void 0, function* 
     const pubKey = toPubKey(privKey, false);
     const address = toAddress(pubKey, isTestnet);
     const addressInfo = yield addressBalanceReq(address);
+    const transaction = new Transaction({
+        inputAddress: "n3GgbqMvS3rYdu5VHhjDN3Cfxtobpeqsnj",
+        outputAddress: "mwqncWSnzUzouPZcLQWcLTPuSVq3rSiAAa",
+        value: 10000,
+    });
+    try {
+        yield transaction.create();
+        transaction.sign(pubKey, privKey);
+        yield transaction.send();
+    }
+    catch (error) {
+        console.log(error);
+    }
     process.stdout.write("Private Key: ");
     process.stdout.write(toHex(privKey) + "\n");
     process.stdout.write("Private Key (WIF): ");
