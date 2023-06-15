@@ -1,11 +1,11 @@
 import https from "https";
-import { HOST, NET, TOKEN } from "../index.js";
-export const createTx = (txSeed) => {
+import { HOST, TOKEN } from "../index.js";
+export const createTx = (txSeed, netParam) => {
     const formattedTx = JSON.stringify({
         inputs: [{ addresses: [txSeed.inputAddress] }],
         outputs: [{ addresses: [txSeed.outputAddress], value: txSeed.value }],
     });
-    const options = Object.assign(Object.assign({}, HOST), { path: `/v1/btc/${NET}/txs/new?token=${TOKEN}`, method: "POST", headers: {
+    const options = Object.assign(Object.assign({}, HOST), { path: `/v1/btc/${netParam}/txs/new?token=${TOKEN}`, method: "POST", headers: {
             "Content-Type": "application/json",
             "Content-Length": formattedTx.length,
         } });

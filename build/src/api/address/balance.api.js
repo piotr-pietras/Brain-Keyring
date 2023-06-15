@@ -1,7 +1,7 @@
 import https from "https";
-import { HOST, NET, TOKEN } from "../index.js";
-export const addressBalanceReq = (address) => {
-    const options = Object.assign(Object.assign({}, HOST), { path: `/v1/btc/${NET}/addrs/${address}/balance?token=${TOKEN}`, method: "GET" });
+import { HOST, TOKEN } from "../index.js";
+export const addressBalanceReq = (address, net) => {
+    const options = Object.assign(Object.assign({}, HOST), { path: `/v1/btc/${net}/addrs/${address}/balance?token=${TOKEN}`, method: "GET" });
     return new Promise((resolver, reject) => {
         const req = https.request(options, (res) => {
             let data = Buffer.from([]);

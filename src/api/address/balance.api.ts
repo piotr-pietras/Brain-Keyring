@@ -1,5 +1,6 @@
 import https from "https";
-import { HOST, NET, TOKEN } from "../index.js";
+import { HOST, TOKEN } from "../index.js";
+import { Net } from "../../common/blockchain.types.js";
 
 interface BalanceRes {
   balance: number;
@@ -7,10 +8,13 @@ interface BalanceRes {
   total_sent: number;
 }
 
-export const addressBalanceReq = (address: string): Promise<BalanceRes> => {
+export const addressBalanceReq = (
+  address: string,
+  net: Net
+): Promise<BalanceRes> => {
   const options: https.RequestOptions = {
     ...HOST,
-    path: `/v1/btc/${NET}/addrs/${address}/balance?token=${TOKEN}`,
+    path: `/v1/btc/${net}/addrs/${address}/balance?token=${TOKEN}`,
     method: "GET",
   };
 

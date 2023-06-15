@@ -7,10 +7,9 @@ const ADR_TEST_NET_PREFIX = "6F";
 // const WIF_MAIN_NET_PREFIX = "80";
 // const WIF_TEST_NET_PREFIX = "EF";
 export class Keys {
-    constructor(phrase) {
-        this.isTestnet = true;
+    constructor(phrase, net) {
         this.pubKeyToAddress = (pubKey) => {
-            const prefix = this.isTestnet ? ADR_TEST_NET_PREFIX : ADR_MAIN_NET_PREFIX;
+            const prefix = this.net === "TEST_NET" ? ADR_TEST_NET_PREFIX : ADR_MAIN_NET_PREFIX;
             const base = sha256(Buffer.from(pubKey));
             const ripemd = new ripemd160().update(Buffer.from(base)).digest();
             const ripemdPrefixed = Buffer.concat([Buffer.from(prefix, "hex"), ripemd]);
@@ -18,6 +17,7 @@ export class Keys {
             const ripemdChecksum = Buffer.concat([ripemdPrefixed, checksum]);
             return bs58.encode(ripemdChecksum);
         };
+        this.net = net;
         this.phrase = phrase;
         this.privKey = this.phraseToPrivKey(this.phrase);
         this.pubKey = this.privKeyToPubKey(this.privKey);
@@ -44,11 +44,11 @@ export class Keys {
         return secp256k1.sign(msg, Buffer.from(privKey).toString("hex"));
     }
     logInfo() {
-        process.stdout.write("Private Key: ");
-        process.stdout.write(Buffer.from(this.privKey).toString("hex") + "\n");
-        process.stdout.write("Public Key (uncompressed): ");
-        process.stdout.write(Buffer.from(this.pubKey).toString("hex") + "\n");
-        process.stdout.write("Address: ");
-        process.stdout.write(this.address + "\n");
+        console.log("Private Key: ");
+        console.log(Buffer.from(this.privKey).toString("hex") + "\n");
+        console.log("Public Key (uncompressed): ");
+        console.log(Buffer.from(this.pubKey).toString("hex") + "\n");
+        console.log("Address: ");
+        console.log(this.address + "\n");
     }
 }

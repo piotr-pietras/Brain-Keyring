@@ -2,6 +2,7 @@ import { sha256 } from "@noble/hashes/sha256";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import bs58 from "bs58";
 import ripemd160 from "ripemd160";
+import { Net } from "../common/blockchain.types.js";
 
 const ADR_MAIN_NET_PREFIX = "00";
 const ADR_TEST_NET_PREFIX = "6F";
@@ -9,13 +10,14 @@ const ADR_TEST_NET_PREFIX = "6F";
 // const WIF_TEST_NET_PREFIX = "EF";
 
 export class Keys {
-  isTestnet = true;
+  net: Net;
   phrase: string;
   privKey: Uint8Array;
   pubKey: Uint8Array;
   address: string;
 
-  constructor(phrase: string) {
+  constructor(phrase: string, net: Net) {
+    this.net = net;
     this.phrase = phrase;
     this.privKey = this.phraseToPrivKey(this.phrase);
     this.pubKey = this.privKeyToPubKey(this.privKey);
@@ -31,7 +33,8 @@ export class Keys {
   }
 
   private pubKeyToAddress = (pubKey: Uint8Array) => {
-    const prefix = this.isTestnet ? ADR_TEST_NET_PREFIX : ADR_MAIN_NET_PREFIX;
+    const prefix =
+      this.net === "TEST_NET" ? ADR_TEST_NET_PREFIX : ADR_MAIN_NET_PREFIX;
     const base = sha256(Buffer.from(pubKey));
 
     const ripemd = new ripemd160().update(Buffer.from(base)).digest();
@@ -61,11 +64,11 @@ export class Keys {
   }
 
   logInfo() {
-    process.stdout.write("Private Key: ");
-    process.stdout.write(Buffer.from(this.privKey).toString("hex") + "\n");
-    process.stdout.write("Public Key (uncompressed): ");
-    process.stdout.write(Buffer.from(this.pubKey).toString("hex") + "\n");
-    process.stdout.write("Address: ");
-    process.stdout.write(this.address + "\n");
+    console.log("Private Key: ");
+    console.log(Buffer.from(this.privKey).toString("hex") + "\n");
+    console.log("Public Key (uncompressed): ");
+    console.log(Buffer.from(this.pubKey).toString("hex") + "\n");
+    console.log("Address: ");
+    console.log(this.address + "\n");
   }
 }

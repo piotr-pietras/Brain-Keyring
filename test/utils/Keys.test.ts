@@ -10,7 +10,7 @@ const ADDRESS_TEST = "n3GgbqMvS3rYdu5VHhjDN3Cfxtobpeqsnj";
 // const ADDRESS_MAIN = "1NkjJnGwd2RHrnbsa8kqY7zM6uCttJhzxx";
 
 describe("Keys class", function () {
-  const keys = new Keys(PHRASE);
+  const keys = new Keys(PHRASE, "TEST_NET");
 
   describe("private key", function () {
     it("should return valid private key ", function () {

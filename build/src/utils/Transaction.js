@@ -11,16 +11,19 @@ import { createTx } from "../api/transaction/createTx.api.js";
 import { sendTx } from "../api/transaction/sendTx.api.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 export class Transaction {
-    constructor(tx) {
+    constructor(tx, net) {
         this.txSeed = tx;
+        this.netParam = net === "MAIN_NET" ? "main" : "test3";
     }
     create() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.txSekeleton)
                 throw "Tx already created...";
-            this.txSekeleton = yield createTx(this.txSeed);
-            if (this.txSekeleton.errors)
-                throw "Errors occured...";
+            this.txSekeleton = yield createTx(this.txSeed, this.netParam);
+            if (this.txSekeleton.errors) {
+                this.errors = JSON.stringify(this.txSekeleton.errors);
+                throw `BlockCypher api error: \n ${this.errors} ...`;
+            }
             return Promise.resolve();
         });
     }
@@ -54,9 +57,11 @@ export class Transaction {
                 throw "Tx is not signed...";
             if (this.txCompleted)
                 throw "Tx already performed...";
-            this.txCompleted = yield sendTx(this.txSigned);
-            if (this.txCompleted.errors)
-                throw "Errors occured...";
+            this.txCompleted = yield sendTx(this.txSigned, this.netParam);
+            if (this.txCompleted.errors) {
+                this.errors = JSON.stringify(this.txCompleted.errors);
+                throw `BlockCypher api error: \n ${this.errors} ...`;
+            }
             return Promise.resolve();
         });
     }

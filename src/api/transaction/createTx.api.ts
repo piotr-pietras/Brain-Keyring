@@ -1,15 +1,18 @@
 import https from "https";
-import { HOST, NET, TOKEN } from "../index.js";
-import { TXSeed, TXSekeleton } from "../../types.js";
+import { HOST, TOKEN } from "../index.js";
+import { TXSeed, TXSekeleton } from "../../common/transaction.types.js";
 
-export const createTx = (txSeed: TXSeed): Promise<TXSekeleton | undefined> => {
+export const createTx = (
+  txSeed: TXSeed,
+  netParam: string
+): Promise<TXSekeleton | undefined> => {
   const formattedTx = JSON.stringify({
     inputs: [{ addresses: [txSeed.inputAddress] }],
     outputs: [{ addresses: [txSeed.outputAddress], value: txSeed.value }],
   });
   const options: https.RequestOptions = {
     ...HOST,
-    path: `/v1/btc/${NET}/txs/new?token=${TOKEN}`,
+    path: `/v1/btc/${netParam}/txs/new?token=${TOKEN}`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",

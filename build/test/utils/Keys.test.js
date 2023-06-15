@@ -6,7 +6,7 @@ const PUB_KEY = "040bf654bd2cfc5c16af3c1904572b749c1db27e31318ffd232b8f7c0320a1a
 const ADDRESS_TEST = "n3GgbqMvS3rYdu5VHhjDN3Cfxtobpeqsnj";
 // const ADDRESS_MAIN = "1NkjJnGwd2RHrnbsa8kqY7zM6uCttJhzxx";
 describe("Keys class", function () {
-    const keys = new Keys(PHRASE);
+    const keys = new Keys(PHRASE, "TEST_NET");
     describe("private key", function () {
         it("should return valid private key ", function () {
             const result = Buffer.from(keys.privKey).toString("hex");
