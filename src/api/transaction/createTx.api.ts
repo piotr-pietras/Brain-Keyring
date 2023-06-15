@@ -1,10 +1,11 @@
 import https from "https";
 import { HOST, TOKEN } from "../index.js";
 import { TXSeed, TXSekeleton } from "../../common/transaction.types.js";
+import { Net } from "../../common/blockchain.types.js";
 
 export const createTx = (
   txSeed: TXSeed,
-  netParam: string
+  net: Net
 ): Promise<TXSekeleton | undefined> => {
   const formattedTx = JSON.stringify({
     inputs: [{ addresses: [txSeed.inputAddress] }],
@@ -12,7 +13,7 @@ export const createTx = (
   });
   const options: https.RequestOptions = {
     ...HOST,
-    path: `/v1/btc/${netParam}/txs/new?token=${TOKEN}`,
+    path: `/v1/btc/${net}/txs/new?token=${TOKEN}`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",

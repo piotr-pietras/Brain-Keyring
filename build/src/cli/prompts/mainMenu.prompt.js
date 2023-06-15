@@ -1,21 +1,28 @@
 import inq from "inquirer";
 import { promptChooseBlockchain } from "./chooseBlockchain.prompt.js";
+import { printWelcome } from "../welcoming.js";
 var Choices;
 (function (Choices) {
-    Choices["LOGIN"] = "login";
-    Choices["EXIT"] = "exit";
+    Choices["LOGIN"] = "Login to a wallet";
+    Choices["EXIT"] = "Exit";
 })(Choices || (Choices = {}));
 export const promptMainMenu = (context) => {
+    console.clear();
+    printWelcome();
     inq
         .prompt([
-        { name: "MainMenu", type: "list", choices: Object.values(Choices) },
+        {
+            name: "menu",
+            message: "What do you want to do?",
+            type: "list",
+            choices: Object.values(Choices),
+        },
     ])
-        .then((a) => {
-        switch (a.MainMenu) {
+        .then(({ menu }) => {
+        switch (menu) {
             case Choices.EXIT:
                 break;
             case Choices.LOGIN:
-                console.log('login');
                 promptChooseBlockchain(context);
                 break;
         }

@@ -13,13 +13,13 @@ import { secp256k1 } from "@noble/curves/secp256k1";
 export class Transaction {
     constructor(tx, net) {
         this.txSeed = tx;
-        this.netParam = net === "MAIN_NET" ? "main" : "test3";
+        this.net = net;
     }
     create() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.txSekeleton)
                 throw "Tx already created...";
-            this.txSekeleton = yield createTx(this.txSeed, this.netParam);
+            this.txSekeleton = yield createTx(this.txSeed, this.net);
             if (this.txSekeleton.errors) {
                 this.errors = JSON.stringify(this.txSekeleton.errors);
                 throw `BlockCypher api error: \n ${this.errors} ...`;
@@ -57,7 +57,7 @@ export class Transaction {
                 throw "Tx is not signed...";
             if (this.txCompleted)
                 throw "Tx already performed...";
-            this.txCompleted = yield sendTx(this.txSigned, this.netParam);
+            this.txCompleted = yield sendTx(this.txSigned, this.net);
             if (this.txCompleted.errors) {
                 this.errors = JSON.stringify(this.txCompleted.errors);
                 throw `BlockCypher api error: \n ${this.errors} ...`;

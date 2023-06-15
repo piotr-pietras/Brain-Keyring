@@ -1,8 +1,8 @@
 import https from "https";
 import { HOST, TOKEN } from "../index.js";
-export const sendTx = (txSigned, netParam) => {
+export const sendTx = (txSigned, net) => {
     const toSend = JSON.stringify(txSigned);
-    const options = Object.assign(Object.assign({}, HOST), { path: `/v1/btc/${netParam}/txs/send?token=${TOKEN}`, method: "POST", headers: {
+    const options = Object.assign(Object.assign({}, HOST), { path: `/v1/btc/${net}/txs/send?token=${TOKEN}`, method: "POST", headers: {
             "Content-Type": "application/json",
             "Content-Length": toSend.length,
         } });

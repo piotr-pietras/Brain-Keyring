@@ -1,6 +1,8 @@
-export type Net = "MAIN_NET" | "TEST_NET";
+export enum Net {
+  MAIN = "main",
+  TEST3 = "test3",
+}
 
 export enum Blockchains {
-  BTC_MAIN = "btc-main",
-  BTC_TEST = "btc-test",
+  BTC = "btc",
 }

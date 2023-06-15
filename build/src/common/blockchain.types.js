@@ -1,5 +1,9 @@
+export var Net;
+(function (Net) {
+    Net["MAIN"] = "main";
+    Net["TEST3"] = "test3";
+})(Net || (Net = {}));
 export var Blockchains;
 (function (Blockchains) {
-    Blockchains["BTC_MAIN"] = "btc-main";
-    Blockchains["BTC_TEST"] = "btc-test";
+    Blockchains["BTC"] = "btc";
 })(Blockchains || (Blockchains = {}));

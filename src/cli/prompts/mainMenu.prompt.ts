@@ -1,23 +1,31 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
 import { promptChooseBlockchain } from "./chooseBlockchain.prompt.js";
+import { printWelcome } from "../welcoming.js";
 
 enum Choices {
-  LOGIN = "login",
-  EXIT = "exit",
+  LOGIN = "Login to a wallet",
+  EXIT = "Exit",
 }
 
 export const promptMainMenu = (context: Context) => {
+  console.clear();
+  printWelcome();
+
   inq
-    .prompt<{ MainMenu: Choices }>([
-      { name: "MainMenu", type: "list", choices: Object.values(Choices) },
+    .prompt<{ menu: Choices }>([
+      {
+        name: "menu",
+        message: "What do you want to do?",
+        type: "list",
+        choices: Object.values(Choices),
+      },
     ])
-    .then((a) => {
-      switch (a.MainMenu) {
+    .then(({ menu }) => {
+      switch (menu) {
         case Choices.EXIT:
           break;
         case Choices.LOGIN:
-          console.log('login')
           promptChooseBlockchain(context);
           break;
       }

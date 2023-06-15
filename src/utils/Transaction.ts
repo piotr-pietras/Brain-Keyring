@@ -11,7 +11,7 @@ import { Keys } from "./Keys.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 
 export class Transaction {
-  netParam: string;
+  net: Net;
   errors?: string;
   txSeed: TXSeed;
   txSekeleton: TXSekeleton;
@@ -20,12 +20,12 @@ export class Transaction {
 
   constructor(tx: TXSeed, net: Net) {
     this.txSeed = tx;
-    this.netParam = net === "MAIN_NET" ? "main" : "test3";
+    this.net = net;
   }
 
   async create() {
     if (this.txSekeleton) throw "Tx already created...";
-    this.txSekeleton = await createTx(this.txSeed, this.netParam);
+    this.txSekeleton = await createTx(this.txSeed, this.net);
     if (this.txSekeleton.errors) {
       this.errors = JSON.stringify(this.txSekeleton.errors);
       throw `BlockCypher api error: \n ${this.errors} ...`;
@@ -60,7 +60,7 @@ export class Transaction {
   async send() {
     if (!this.txSigned) throw "Tx is not signed...";
     if (this.txCompleted) throw "Tx already performed...";
-    this.txCompleted = await sendTx(this.txSigned, this.netParam);
+    this.txCompleted = await sendTx(this.txSigned, this.net);
     if (this.txCompleted.errors) {
       this.errors = JSON.stringify(this.txCompleted.errors);
       throw `BlockCypher api error: \n ${this.errors} ...`;

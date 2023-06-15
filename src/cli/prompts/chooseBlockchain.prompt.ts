@@ -1,28 +1,68 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
-import { Blockchains } from "../../common/blockchain.types.js";
-import { promptMainMenu } from "./mainMenu.prompt.js";
+import { Blockchains, Net } from "../../common/blockchain.types.js";
+import { Keys } from "../../utils/Keys.js";
+import { promptWalletMenu } from "./walletMenu.prompt.js";
+import { printWelcome } from "../welcoming.js";
 
-enum Choices {
-  BTC_MAIN = Blockchains.BTC_MAIN,
-  BTC_TEST = Blockchains.BTC_TEST,
-  CANCEL = "cancel",
+enum ChoicesBlockchain {
+  BTC = Blockchains.BTC,
+}
+
+enum ChoicesNet {
+  MAIN = Net.MAIN,
+  TEST3 = Net.TEST3,
 }
 
 export const promptChooseBlockchain = (context: Context) => {
+  console.clear();
+  printWelcome();
+
   inq
-    .prompt<{ ChooseBlockchain: Choices }>([
-      { name: "ChooseBlockchain", type: "list", choices: Object.values(Choices) },
-    ])
-    .then((a) => {
-      switch (a.ChooseBlockchain) {
-        case Choices.BTC_MAIN:
-          break;
-        case Choices.BTC_TEST:
-          break;
-        case Choices.CANCEL:
-          promptMainMenu(context);
+    .prompt<{ blockchain: ChoicesBlockchain; net: ChoicesNet; phrase: string }>(
+      [
+        {
+          name: "blockchain",
+          message: "Login to a wallet: \n 1)Choose blockchain wallet",
+          type: "list",
+          choices: Object.values(ChoicesBlockchain),
+        },
+        {
+          name: "net",
+          message: "2)Choose net",
+          type: "list",
+          choices: Object.values(ChoicesNet),
+        },
+        {
+          name: "phrase",
+          message: "3)Type phrases",
+          type: "input",
+        },
+      ]
+    )
+    .then(({ blockchain, net, phrase }) => {
+      switch (blockchain) {
+        case ChoicesBlockchain.BTC:
+          switch (net) {
+            case ChoicesNet.MAIN:
+              context.wallet = {
+                blockchain: Blockchains.BTC,
+                net: Net.MAIN,
+                keys: new Keys(phrase, Net.MAIN),
+                transactions: [],
+              };
+              break;
+            case ChoicesNet.TEST3:
+              context.wallet = {
+                blockchain: Blockchains.BTC,
+                net: Net.TEST3,
+                keys: new Keys(phrase, Net.TEST3),
+                transactions: [],
+              };
+              break;
+          }
           break;
       }
+      promptWalletMenu(context);
     });
 };
