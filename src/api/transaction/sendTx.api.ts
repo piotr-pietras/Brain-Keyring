@@ -21,10 +21,7 @@ export const sendTx = (txSigned: TXSigned, net: Net): Promise<TXCompleted> => {
       res.on("end", () => resolver(JSON.parse(data.toString())));
     });
 
-    req.on("error", (err) => {
-      console.log(err);
-      reject("Error...");
-    });
+    req.on("error", (err) => reject(`Request error: \n${err}`));
     req.write(toSend);
     req.end();
   });

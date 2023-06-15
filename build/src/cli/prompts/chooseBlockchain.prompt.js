@@ -19,7 +19,7 @@ export const promptChooseBlockchain = (context) => {
         .prompt([
         {
             name: "blockchain",
-            message: "Login to a wallet: \n 1)Choose blockchain wallet",
+            message: "Login to a wallet: \n1)Choose blockchain wallet",
             type: "list",
             choices: Object.values(ChoicesBlockchain),
         },
@@ -44,7 +44,6 @@ export const promptChooseBlockchain = (context) => {
                             blockchain: Blockchains.BTC,
                             net: Net.MAIN,
                             keys: new Keys(phrase, Net.MAIN),
-                            transactions: [],
                         };
                         break;
                     case ChoicesNet.TEST3:
@@ -52,7 +51,6 @@ export const promptChooseBlockchain = (context) => {
                             blockchain: Blockchains.BTC,
                             net: Net.TEST3,
                             keys: new Keys(phrase, Net.TEST3),
-                            transactions: [],
                         };
                         break;
                 }

@@ -1,34 +1,38 @@
 import inq from "inquirer";
 import { promptMainMenu } from "./mainMenu.prompt.js";
 import { printWelcome } from "../welcoming.js";
-import { Net } from "../../common/blockchain.types.js";
+import { createTransaction } from "./createTransaction.prompt.js";
 var Choices;
 (function (Choices) {
+    Choices["TRANSACTION"] = "Make transaction";
     Choices["KEYS"] = "Show your keys (unsafe)";
     Choices["LOGOUT"] = "Logout";
 })(Choices || (Choices = {}));
-export const promptWalletMenu = (context) => {
-    console.clear();
-    printWelcome();
+export const promptWalletMenu = (context, skipWelcome) => {
+    if (!skipWelcome) {
+        console.clear();
+        printWelcome();
+    }
     if (!context.wallet)
         throw "Wallet is not initialized";
     const { blockchain, net, keys } = context.wallet;
-    const netParam = net === Net.MAIN ? "mainnet" : "testnet";
-    const explorer = `https://live.blockcypher.com/${blockchain}-${netParam}/address/${keys.address}/`;
     inq
         .prompt([
         {
             name: "wallet",
-            message: `${blockchain}-${net} => address: ${keys.address}\n${explorer}`,
+            message: `${blockchain}-${net} => address: ${keys.address}`,
             type: "list",
             choices: Object.values(Choices),
         },
     ])
         .then(({ wallet }) => {
         switch (wallet) {
+            case Choices.TRANSACTION:
+                createTransaction(context);
+                break;
             case Choices.KEYS:
                 keys.logKeys();
-                promptWalletMenu(context);
+                promptWalletMenu(context, true);
                 break;
             case Choices.LOGOUT:
                 promptMainMenu(context);

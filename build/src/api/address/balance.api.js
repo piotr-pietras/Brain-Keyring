@@ -8,10 +8,7 @@ export const addressBalanceReq = (address, net) => {
             res.on("data", (chunk) => (data = Buffer.concat([data, chunk])));
             res.on("end", () => resolver(JSON.parse(data.toString())));
         });
-        req.on("error", (err) => {
-            console.log(err);
-            reject("Error...");
-        });
+        req.on("error", (err) => reject(`Request error: \n${err}`));
         req.end();
     });
 };

@@ -7,7 +7,7 @@ export type Context = {
     blockchain: Blockchains;
     keys: Keys;
     net: Net;
-    transactions: Transaction[];
+    transaction?: Transaction;
   };
 };
 

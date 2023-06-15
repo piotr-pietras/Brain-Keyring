@@ -35,6 +35,7 @@ export class Keys {
 
     const ripemd = new ripemd160().update(Buffer.from(base)).digest();
     const ripemdPrefixed = Buffer.concat([Buffer.from(prefix, "hex"), ripemd]);
+
     const checksum = Buffer.from(sha256(sha256(ripemdPrefixed)).slice(0, 4));
     const ripemdChecksum = Buffer.concat([ripemdPrefixed, checksum]);
 

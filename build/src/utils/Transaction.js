@@ -17,23 +17,15 @@ export class Transaction {
     }
     create() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.txSekeleton)
-                throw "Tx already created...";
             this.txSekeleton = yield createTx(this.txSeed, this.net);
             if (this.txSekeleton.errors) {
                 this.errors = JSON.stringify(this.txSekeleton.errors);
-                throw `BlockCypher api error: \n ${this.errors} ...`;
+                throw `Block Cypher responses with error:\n${this.errors}`;
             }
             return Promise.resolve();
         });
     }
     sign(keys) {
-        if (!this.txSekeleton)
-            throw "Tx skeleton does not exist...";
-        if (!this.txSekeleton.tosign)
-            throw "Nothing to sign...";
-        if (this.txSigned)
-            throw "Tx were already signed...";
         const { privKey, pubKey } = keys;
         const { tosign, tx } = this.txSekeleton;
         const pubkeys = [];
@@ -53,14 +45,10 @@ export class Transaction {
     }
     send() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.txSigned)
-                throw "Tx is not signed...";
-            if (this.txCompleted)
-                throw "Tx already performed...";
             this.txCompleted = yield sendTx(this.txSigned, this.net);
             if (this.txCompleted.errors) {
                 this.errors = JSON.stringify(this.txCompleted.errors);
-                throw `BlockCypher api error: \n ${this.errors} ...`;
+                throw `Block Cypher responses with error:\n ${this.errors}`;
             }
             return Promise.resolve();
         });

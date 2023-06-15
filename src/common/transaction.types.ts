@@ -6,7 +6,10 @@ export interface TXSeed {
 
 export interface TXSekeleton {
   errors?: unknown[];
-  tx: unknown;
+  tx: {
+    fees: number;
+    addresses: string[];
+  };
   tosign: string[];
 }
 

@@ -24,19 +24,16 @@ export class Transaction {
   }
 
   async create() {
-    if (this.txSekeleton) throw "Tx already created...";
     this.txSekeleton = await createTx(this.txSeed, this.net);
     if (this.txSekeleton.errors) {
       this.errors = JSON.stringify(this.txSekeleton.errors);
-      throw `BlockCypher api error: \n ${this.errors} ...`;
+      throw `Block Cypher responses with error:\n${this.errors}`;
     }
+
     return Promise.resolve();
   }
 
   sign(keys: Keys) {
-    if (!this.txSekeleton) throw "Tx skeleton does not exist...";
-    if (!this.txSekeleton.tosign) throw "Nothing to sign...";
-    if (this.txSigned) throw "Tx were already signed...";
     const { privKey, pubKey } = keys;
     const { tosign, tx } = this.txSekeleton;
     const pubkeys = [];
@@ -58,13 +55,12 @@ export class Transaction {
   }
 
   async send() {
-    if (!this.txSigned) throw "Tx is not signed...";
-    if (this.txCompleted) throw "Tx already performed...";
     this.txCompleted = await sendTx(this.txSigned, this.net);
     if (this.txCompleted.errors) {
       this.errors = JSON.stringify(this.txCompleted.errors);
-      throw `BlockCypher api error: \n ${this.errors} ...`;
+      throw `Block Cypher responses with error:\n ${this.errors}`;
     }
+
     return Promise.resolve();
   }
 }

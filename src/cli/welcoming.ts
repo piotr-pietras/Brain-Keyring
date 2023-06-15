@@ -8,4 +8,5 @@ export const printWelcome = () => {
   (           )
  ( (  )   (  ) )
 (__(__)___(__)__)`);
+  console.log("");
 };
