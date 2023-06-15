@@ -1,6 +1,6 @@
 import https from "https";
 import { HOST, NET, TOKEN } from "../index.js";
-import { TXSeed, TXSekeleton } from "./Transaction.js";
+import { TXSeed, TXSekeleton } from "../../types.js";
 
 export const createTx = (txSeed: TXSeed): Promise<TXSekeleton | undefined> => {
   const formattedTx = JSON.stringify({

@@ -1,8 +1,8 @@
 import https from "https";
 import { HOST, NET, TOKEN } from "../index.js";
-import { TXSigned } from "./Transaction.js";
+import { TXCompleted, TXSigned } from "../../types.js";
 
-export const sendTx = (txSigned: TXSigned): Promise<any> => {
+export const sendTx = (txSigned: TXSigned): Promise<TXCompleted> => {
   const toSend = JSON.stringify(txSigned);
   const options: https.RequestOptions = {
     ...HOST,

@@ -10,10 +10,7 @@ export const sendTx = (txSigned) => {
         const req = https.request(options, (res) => {
             let data = Buffer.from([]);
             res.on("data", (chunk) => (data = Buffer.concat([data, chunk])));
-            res.on("end", () => {
-                console.log(data.toString("utf8"));
-                resolver("");
-            });
+            res.on("end", () => resolver(JSON.parse(data.toString())));
         });
         req.on("error", (err) => {
             console.log(err);
