@@ -2,8 +2,9 @@ import inq from "inquirer";
 import { Context } from "../context.js";
 import { printWelcome } from "../welcoming.js";
 import { Transaction } from "../../utils/Transaction.js";
-import { TXSeed } from "../../common/transaction.types.js";
+import { TXSeed } from "../../utils/Transaction.types.js";
 import { promptSendTransaction } from "./sendTransaction.prompt.js";
+import { log } from "../../common/log.js";
 
 export const createTransaction = (context: Context) => {
   console.clear();
@@ -23,9 +24,7 @@ export const createTransaction = (context: Context) => {
       },
     ])
     .then(async ({ output, value }) => {
-      console.log(
-        "Please wait... Block Cypher creates for you TX object to sign."
-      );
+      log("Please wait... Block Cypher creates for you TX object to sign.");
       const { keys, net } = context.wallet;
       const txSeed: TXSeed = {
         inputAddress: keys.address,
@@ -38,7 +37,7 @@ export const createTransaction = (context: Context) => {
         context.wallet.transaction = transaction;
         promptSendTransaction(context);
       } catch (err) {
-        console.log(err);
+        log(err);
       }
     });
 };

@@ -17,7 +17,7 @@ export const buildMainMenuPrompt = () => {
             { name, type: "list", choices: ["btc-main", "btc-test"], },
         ])
             .then((answer) => {
-            console.log(answer);
+            log(answer);
         }),
     };
 };

@@ -6,13 +6,13 @@ import {
   TXSeed,
   TXSekeleton,
   TXSigned,
-} from "../common/transaction.types.js";
+} from "./Transaction.types.js";
 import { Keys } from "./Keys.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 
 export class Transaction {
   net: Net;
-  errors?: string;
+  errors: string = "";
   txSeed: TXSeed;
   txSekeleton: TXSekeleton;
   txSigned: TXSigned;
@@ -21,16 +21,6 @@ export class Transaction {
   constructor(tx: TXSeed, net: Net) {
     this.txSeed = tx;
     this.net = net;
-  }
-
-  async create() {
-    this.txSekeleton = await createTx(this.txSeed, this.net);
-    if (this.txSekeleton.errors) {
-      this.errors = JSON.stringify(this.txSekeleton.errors);
-      throw `Block Cypher responses with error:\n${this.errors}`;
-    }
-
-    return Promise.resolve();
   }
 
   sign(keys: Keys) {
@@ -54,13 +44,25 @@ export class Transaction {
     };
   }
 
+  async create() {
+    this.txSekeleton = await createTx(this.txSeed, this.net);
+    this.errorCheck();
+    return Promise.resolve();
+  }
+
   async send() {
     this.txCompleted = await sendTx(this.txSigned, this.net);
-    if (this.txCompleted.errors) {
-      this.errors = JSON.stringify(this.txCompleted.errors);
-      throw `Block Cypher responses with error:\n ${this.errors}`;
-    }
-
+    this.errorCheck();
     return Promise.resolve();
+  }
+
+  private errorCheck() {
+    if (this.txSekeleton?.errors) {
+      this.errors += JSON.stringify(this.txSekeleton.errors);
+    }
+    if (this.txCompleted?.errors) {
+      this.errors += JSON.stringify(this.txCompleted.errors);
+    }
+    throw `Block Cypher responses with error:\n ${this.errors}`;
   }
 }

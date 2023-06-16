@@ -1,6 +1,6 @@
 import https from "https";
 import { HOST, TOKEN } from "../index.js";
-import { TXSeed, TXSekeleton } from "../../common/transaction.types.js";
+import { TXSeed, TXSekeleton } from "../../utils/Transaction.types.js";
 import { Net } from "../../common/blockchain.types.js";
 
 export const createTx = (

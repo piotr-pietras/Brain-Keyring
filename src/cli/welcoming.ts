@@ -1,6 +1,8 @@
+import { log } from "../common/log.js";
+
 export const printWelcome = () => {
-  console.log("Welcome to TinyBrainWallet");
-  console.log(`
+  log("Welcome to TinyBrainWallet");
+  log(`
     /\\_____/\\
    /  o   o  \\
   ( ==  ^  == )
@@ -8,5 +10,5 @@ export const printWelcome = () => {
   (           )
  ( (  )   (  ) )
 (__(__)___(__)__)`);
-  console.log("");
+  log("");
 };

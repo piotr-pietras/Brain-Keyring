@@ -19,5 +19,5 @@ export interface TXSigned extends TXSekeleton {
 }
 
 export interface TXCompleted extends TXSekeleton {
-  tosing: [];
+  tosign: [];
 }

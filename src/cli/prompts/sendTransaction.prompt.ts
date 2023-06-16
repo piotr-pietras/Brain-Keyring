@@ -2,6 +2,7 @@ import inq from "inquirer";
 import { Context } from "../context.js";
 import { printWelcome } from "../welcoming.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
+import { log } from "../../common/log.js";
 
 export const promptSendTransaction = (context: Context) => {
   console.clear();
@@ -12,13 +13,13 @@ export const promptSendTransaction = (context: Context) => {
   const { txSekeleton } = context.wallet.transaction;
   const { keys } = context.wallet;
 
-  console.log("Your TX object was created successfully!");
-  console.log("Check address, value and fees TWICE!");
-  console.log("-------------------------------------------");
-  console.log(`| Output address: HERE IS ADDRESS`);
-  console.log(`| Value: HERE IS MONAY YOU SPEND`);
-  console.log(`| Fees: ${txSekeleton.tx.fees}`);
-  console.log("-------------------------------------------");
+  log("Your TX object was created successfully!");
+  log("Check address, value and fees TWICE!");
+  log("-------------------------------------------");
+  log(`| Output address: HERE IS ADDRESS`);
+  log(`| Value: HERE IS MONAY YOU SPEND`);
+  log(`| Fees: ${txSekeleton.tx.fees}`);
+  log("-------------------------------------------");
 
   inq
     .prompt<{ confirm: boolean }>([
@@ -33,13 +34,13 @@ export const promptSendTransaction = (context: Context) => {
         try {
           context.wallet.transaction.sign(keys);
           await context.wallet.transaction.send();
+          log("Smoooth. Transaction signed! Check block explorer.");
         } catch (err) {
-          console.log(err);
+          log(err);
         }
-        console.log("Smoooth. Transaction signed! Check block explorer.");
         promptWalletMenu(context, true);
       } else {
-        console.log("Transaction canceled");
+        log("Transaction canceled");
       }
     });
 };

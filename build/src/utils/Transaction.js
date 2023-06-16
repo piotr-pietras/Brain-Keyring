@@ -12,18 +12,9 @@ import { sendTx } from "../api/transaction/sendTx.api.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 export class Transaction {
     constructor(tx, net) {
+        this.errors = "";
         this.txSeed = tx;
         this.net = net;
-    }
-    create() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.txSekeleton = yield createTx(this.txSeed, this.net);
-            if (this.txSekeleton.errors) {
-                this.errors = JSON.stringify(this.txSekeleton.errors);
-                throw `Block Cypher responses with error:\n${this.errors}`;
-            }
-            return Promise.resolve();
-        });
     }
     sign(keys) {
         const { privKey, pubKey } = keys;
@@ -43,14 +34,28 @@ export class Transaction {
             signatures,
         };
     }
+    create() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.txSekeleton = yield createTx(this.txSeed, this.net);
+            this.errorCheck();
+            return Promise.resolve();
+        });
+    }
     send() {
         return __awaiter(this, void 0, void 0, function* () {
             this.txCompleted = yield sendTx(this.txSigned, this.net);
-            if (this.txCompleted.errors) {
-                this.errors = JSON.stringify(this.txCompleted.errors);
-                throw `Block Cypher responses with error:\n ${this.errors}`;
-            }
+            this.errorCheck();
             return Promise.resolve();
         });
+    }
+    errorCheck() {
+        var _a, _b;
+        if ((_a = this.txSekeleton) === null || _a === void 0 ? void 0 : _a.errors) {
+            this.errors += JSON.stringify(this.txSekeleton.errors);
+        }
+        if ((_b = this.txCompleted) === null || _b === void 0 ? void 0 : _b.errors) {
+            this.errors += JSON.stringify(this.txCompleted.errors);
+        }
+        throw `Block Cypher responses with error:\n ${this.errors}`;
     }
 }

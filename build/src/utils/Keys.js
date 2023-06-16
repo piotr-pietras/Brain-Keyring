@@ -3,6 +3,7 @@ import { secp256k1 } from "@noble/curves/secp256k1";
 import bs58 from "bs58";
 import ripemd160 from "ripemd160";
 import { Net } from "../common/blockchain.types.js";
+import { log } from "../common/log.js";
 const ADR_MAIN_NET_PREFIX = "00";
 const ADR_TEST_NET_PREFIX = "6F";
 export class Keys {
@@ -31,11 +32,11 @@ export class Keys {
         return secp256k1.sign(msg, Buffer.from(privKey).toString("hex"));
     }
     logKeys() {
-        console.log("\n-------------------------------------------");
-        console.log("| Private Key: ");
-        console.log("| " + Buffer.from(this.privKey).toString("hex") + "\n");
-        console.log("| Public Key (uncompressed): ");
-        console.log("| " + Buffer.from(this.pubKey).toString("hex"));
-        console.log("-------------------------------------------\n");
+        log("\n-------------------------------------------");
+        log("| Private Key: ");
+        log("| " + Buffer.from(this.privKey).toString("hex") + "\n");
+        log("| Public Key (uncompressed): ");
+        log("| " + Buffer.from(this.pubKey).toString("hex"));
+        log("-------------------------------------------\n");
     }
 }

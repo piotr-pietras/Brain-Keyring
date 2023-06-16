@@ -1,6 +1,6 @@
 import https from "https";
 import { HOST, TOKEN } from "../index.js";
-import { TXCompleted, TXSigned } from "../../common/transaction.types.js";
+import { TXCompleted, TXSigned } from "../../utils/Transaction.types.js";
 import { Net } from "../../common/blockchain.types.js";
 
 export const sendTx = (txSigned: TXSigned, net: Net): Promise<TXCompleted> => {

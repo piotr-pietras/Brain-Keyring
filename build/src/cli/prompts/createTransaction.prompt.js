@@ -11,6 +11,7 @@ import inq from "inquirer";
 import { printWelcome } from "../welcoming.js";
 import { Transaction } from "../../utils/Transaction.js";
 import { promptSendTransaction } from "./sendTransaction.prompt.js";
+import { log } from "../../common/log.js";
 export const createTransaction = (context) => {
     console.clear();
     printWelcome();
@@ -28,7 +29,7 @@ export const createTransaction = (context) => {
         },
     ])
         .then(({ output, value }) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log("Please wait... Block Cypher creates for you TX object to sign.");
+        log("Please wait... Block Cypher creates for you TX object to sign.");
         const { keys, net } = context.wallet;
         const txSeed = {
             inputAddress: keys.address,
@@ -42,7 +43,7 @@ export const createTransaction = (context) => {
             promptSendTransaction(context);
         }
         catch (err) {
-            console.log(err);
+            log(err);
         }
     }));
 };
