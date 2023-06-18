@@ -4,11 +4,17 @@ export interface TXSeed {
   value: number;
 }
 
+interface TXPut {
+  value: number;
+  addresses: string[];
+}
 export interface TXSekeleton {
   errors?: unknown[];
   tx: {
     fees: number;
     addresses: string[];
+    outputs: TXPut[];
+    inputs: TXPut[];
   };
   tosign: string[];
 }

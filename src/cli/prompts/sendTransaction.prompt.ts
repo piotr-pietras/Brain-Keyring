@@ -1,6 +1,6 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
-import { printWelcome } from "../welcoming.js";
+import { printWelcome } from "../printable.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
 import { log } from "../../common/log.js";
 
@@ -9,7 +9,7 @@ export const promptSendTransaction = (context: Context) => {
   printWelcome();
 
   //TX skeleton needs to be validated to avoid any malicious responses
-
+  
   const { txSekeleton } = context.wallet.transaction;
   const { keys } = context.wallet;
 
@@ -34,13 +34,12 @@ export const promptSendTransaction = (context: Context) => {
         try {
           context.wallet.transaction.sign(keys);
           await context.wallet.transaction.send();
-          log("Smoooth. Transaction signed! Check block explorer.");
         } catch (err) {
-          log(err);
+          promptWalletMenu(context, () => log(err));
         }
-        promptWalletMenu(context, true);
+        promptWalletMenu(context, () => log("Transaction signed!"));
       } else {
-        log("Transaction canceled");
+        promptWalletMenu(context, () => log("Transaction canceled"));
       }
     });
 };

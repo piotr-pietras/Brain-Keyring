@@ -1,10 +1,11 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
-import { printWelcome } from "../welcoming.js";
+import { printWelcome } from "../printable.js";
 import { Transaction } from "../../utils/Transaction.js";
 import { TXSeed } from "../../utils/Transaction.types.js";
 import { promptSendTransaction } from "./sendTransaction.prompt.js";
 import { log } from "../../common/log.js";
+import { promptWalletMenu } from "./walletMenu.prompt.js";
 
 export const createTransaction = (context: Context) => {
   console.clear();
@@ -33,11 +34,11 @@ export const createTransaction = (context: Context) => {
       };
       const transaction = new Transaction(txSeed, net);
       try {
-        await transaction.create();
+        await transaction.create(context.wallet.keys);
         context.wallet.transaction = transaction;
         promptSendTransaction(context);
       } catch (err) {
-        log(err);
+        promptWalletMenu(context, () => log(err));
       }
     });
 };

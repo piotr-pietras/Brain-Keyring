@@ -3,7 +3,7 @@ import { Context } from "../context.js";
 import { Blockchains, Net } from "../../common/blockchain.types.js";
 import { Keys } from "../../utils/Keys.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
-import { printWelcome } from "../welcoming.js";
+import { printWelcome } from "../printable.js";
 
 enum ChoicesBlockchain {
   BTC = Blockchains.BTC,

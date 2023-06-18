@@ -1,6 +1,6 @@
 import inq from "inquirer";
 import { promptLoginToWallet } from "./loginToWallet.prompt.js";
-import { printWelcome } from "../welcoming.js";
+import { printWelcome } from "../printable.js";
 var Choices;
 (function (Choices) {
     Choices["LOGIN"] = "Login to a wallet";

@@ -9,6 +9,7 @@ import {
 } from "./Transaction.types.js";
 import { Keys } from "./Keys.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
+import { checkBalance } from "../api/balance/checkBalance.api.js";
 
 export class Transaction {
   net: Net;
@@ -41,9 +42,10 @@ export class Transaction {
     };
   }
 
-  async create() {
+  async create(keys: Keys) {
     this.txSekeleton = await createTx(this.txSeed, this.net);
     this.errorCheck();
+    await this.validateSkeleton(keys);
     return Promise.resolve();
   }
 
@@ -51,6 +53,27 @@ export class Transaction {
     this.txCompleted = await sendTx(this.txSigned, this.net);
     this.errorCheck();
     return Promise.resolve();
+  }
+
+  private async validateSkeleton(keys: Keys) {
+    const { balance } = await checkBalance(keys.addressHex, keys.net);
+    const { inputAddress, outputAddress, value } = this.txSeed;
+    const { addresses, fees, outputs } = this.txSekeleton.tx;
+    const to = outputs.find(({ addresses }) => addresses[0] === outputAddress);
+    const back = outputs.find(({ addresses }) => addresses[0] === inputAddress);
+
+    [
+      addresses.length === 2,
+      !!addresses.find((v) => v === inputAddress),
+      !!addresses.find((v) => v === outputAddress),
+      !!to,
+      !!back,
+      to.value === value,
+      back.value === balance - value - fees,
+    ].forEach((correct) => {
+      if (!correct)
+        throw "TX skeletotn received from Block Cypher seems invalid...";
+    });
   }
 
   private errorCheck() {

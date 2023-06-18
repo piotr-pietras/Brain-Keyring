@@ -1,7 +1,7 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
 import { promptMainMenu } from "./mainMenu.prompt.js";
-import { printWelcome } from "../welcoming.js";
+import { printKeys, printWelcome } from "../printable.js";
 import { createTransaction } from "./createTransaction.prompt.js";
 import { log } from "../../common/log.js";
 
@@ -11,13 +11,11 @@ enum Choices {
   LOGOUT = "Logout",
 }
 
-export const promptWalletMenu = (context: Context, skipWelcome?: boolean) => {
-  if (!skipWelcome) {
-    console.clear();
-    printWelcome();
-  }
+export const promptWalletMenu = (context: Context, before?: () => void) => {
+  console.clear();
+  printWelcome();
+  before && before();
 
-  if (!context.wallet) throw "Wallet is not initialized";
   const { blockchain, net, keys } = context.wallet;
   inq
     .prompt<{ wallet: Choices }>([
@@ -34,12 +32,8 @@ export const promptWalletMenu = (context: Context, skipWelcome?: boolean) => {
           createTransaction(context);
           break;
         case Choices.KEYS:
-          const { privKey, pubKey } = keys.keysHex;
-          log("\n-------------------------------------------");
-          log(`| Private Key: \n| ${privKey} `);
-          log(`| Public Key (uncompressed): \n| ${pubKey}`);
-          log("-------------------------------------------\n");
-          promptWalletMenu(context, true);
+          printKeys(keys);
+          promptWalletMenu(context, () => printKeys(keys));
           break;
         case Choices.LOGOUT:
           promptMainMenu(context);

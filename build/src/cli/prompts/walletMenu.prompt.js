@@ -1,21 +1,17 @@
 import inq from "inquirer";
 import { promptMainMenu } from "./mainMenu.prompt.js";
-import { printWelcome } from "../welcoming.js";
+import { printKeys, printWelcome } from "../printable.js";
 import { createTransaction } from "./createTransaction.prompt.js";
-import { log } from "../../common/log.js";
 var Choices;
 (function (Choices) {
     Choices["TRANSACTION"] = "Make transaction";
     Choices["KEYS"] = "Show your keys (unsafe)";
     Choices["LOGOUT"] = "Logout";
 })(Choices || (Choices = {}));
-export const promptWalletMenu = (context, skipWelcome) => {
-    if (!skipWelcome) {
-        console.clear();
-        printWelcome();
-    }
-    if (!context.wallet)
-        throw "Wallet is not initialized";
+export const promptWalletMenu = (context, before) => {
+    console.clear();
+    printWelcome();
+    before && before();
     const { blockchain, net, keys } = context.wallet;
     inq
         .prompt([
@@ -32,12 +28,8 @@ export const promptWalletMenu = (context, skipWelcome) => {
                 createTransaction(context);
                 break;
             case Choices.KEYS:
-                const { privKey, pubKey } = keys.keysHex;
-                log("\n-------------------------------------------");
-                log(`| Private Key: \n| ${privKey} `);
-                log(`| Public Key (uncompressed): \n| ${pubKey}`);
-                log("-------------------------------------------\n");
-                promptWalletMenu(context, true);
+                printKeys(keys);
+                promptWalletMenu(context, () => printKeys(keys));
                 break;
             case Choices.LOGOUT:
                 promptMainMenu(context);

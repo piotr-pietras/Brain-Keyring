@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import inq from "inquirer";
-import { printWelcome } from "../welcoming.js";
+import { printWelcome } from "../printable.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
 import { log } from "../../common/log.js";
 export const promptSendTransaction = (context) => {
@@ -37,15 +37,14 @@ export const promptSendTransaction = (context) => {
             try {
                 context.wallet.transaction.sign(keys);
                 yield context.wallet.transaction.send();
-                log("Smoooth. Transaction signed! Check block explorer.");
             }
             catch (err) {
-                log(err);
+                promptWalletMenu(context, () => log(err));
             }
-            promptWalletMenu(context, true);
+            promptWalletMenu(context, () => log("Transaction signed!"));
         }
         else {
-            log("Transaction canceled");
+            promptWalletMenu(context, () => log("Transaction canceled"));
         }
     }));
 };

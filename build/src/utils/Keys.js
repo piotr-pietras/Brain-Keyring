@@ -7,15 +7,6 @@ const ADR_MAIN_NET_PREFIX = "00";
 const ADR_TEST_NET_PREFIX = "6F";
 export class Keys {
     constructor(phrase, net) {
-        this.pubKeyToAddress = (pubKey) => {
-            const prefix = this.net === Net.MAIN ? ADR_MAIN_NET_PREFIX : ADR_TEST_NET_PREFIX;
-            const base = sha256(Buffer.from(pubKey));
-            const ripemd = new ripemd160().update(Buffer.from(base)).digest();
-            const ripemdPrefixed = Buffer.concat([Buffer.from(prefix, "hex"), ripemd]);
-            const checksum = Buffer.from(sha256(sha256(ripemdPrefixed)).slice(0, 4));
-            const ripemdChecksum = Buffer.concat([ripemdPrefixed, checksum]);
-            return bs58.encode(ripemdChecksum);
-        };
         this.net = net;
         this.privKey = this.phraseToPrivKey(phrase);
         this.pubKey = this.privKeyToPubKey(this.privKey);
@@ -26,6 +17,15 @@ export class Keys {
     }
     privKeyToPubKey(privKey) {
         return secp256k1.getPublicKey(privKey, false);
+    }
+    pubKeyToAddress(pubKey) {
+        const prefix = this.net === Net.MAIN ? ADR_MAIN_NET_PREFIX : ADR_TEST_NET_PREFIX;
+        const base = sha256(Buffer.from(pubKey));
+        const ripemd = new ripemd160().update(Buffer.from(base)).digest();
+        const ripemdPrefixed = Buffer.concat([Buffer.from(prefix, "hex"), ripemd]);
+        const checksum = Buffer.from(sha256(sha256(ripemdPrefixed)).slice(0, 4));
+        const ripemdChecksum = Buffer.concat([ripemdPrefixed, checksum]);
+        return bs58.encode(ripemdChecksum);
     }
     get keysHex() {
         return {

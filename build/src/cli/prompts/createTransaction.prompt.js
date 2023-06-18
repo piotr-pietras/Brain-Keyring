@@ -8,10 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import inq from "inquirer";
-import { printWelcome } from "../welcoming.js";
+import { printWelcome } from "../printable.js";
 import { Transaction } from "../../utils/Transaction.js";
 import { promptSendTransaction } from "./sendTransaction.prompt.js";
 import { log } from "../../common/log.js";
+import { promptWalletMenu } from "./walletMenu.prompt.js";
 export const createTransaction = (context) => {
     console.clear();
     printWelcome();
@@ -38,12 +39,12 @@ export const createTransaction = (context) => {
         };
         const transaction = new Transaction(txSeed, net);
         try {
-            yield transaction.create();
+            yield transaction.create(context.wallet.keys);
             context.wallet.transaction = transaction;
             promptSendTransaction(context);
         }
         catch (err) {
-            log(err);
+            promptWalletMenu(context, () => log(err));
         }
     }));
 };

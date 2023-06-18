@@ -28,7 +28,7 @@ export class Keys {
     return secp256k1.getPublicKey(privKey, false);
   }
 
-  private pubKeyToAddress = (pubKey: Uint8Array) => {
+  private pubKeyToAddress(pubKey: Uint8Array) {
     const prefix =
       this.net === Net.MAIN ? ADR_MAIN_NET_PREFIX : ADR_TEST_NET_PREFIX;
     const base = sha256(Buffer.from(pubKey));
@@ -40,7 +40,7 @@ export class Keys {
     const ripemdChecksum = Buffer.concat([ripemdPrefixed, checksum]);
 
     return bs58.encode(ripemdChecksum);
-  };
+  }
 
   get keysHex() {
     return {

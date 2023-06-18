@@ -1,7 +1,7 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
 import { promptLoginToWallet } from "./loginToWallet.prompt.js";
-import { printWelcome } from "../welcoming.js";
+import { printWelcome } from "../printable.js";
 
 enum Choices {
   LOGIN = "Login to a wallet",
