@@ -12,25 +12,24 @@ const ADDRESS_TEST = "n3GgbqMvS3rYdu5VHhjDN3Cfxtobpeqsnj";
 
 describe("Keys class", function () {
   const keys = new Keys(PHRASE, Net.TEST3);
+  const { privKey, pubKey } = keys.keysHex;
+  const address = keys.addressHex;
 
   describe("private key", function () {
     it("should return valid private key ", function () {
-      const result = Buffer.from(keys.privKey).toString("hex");
-      assert.equal(result, PRIV_KEY);
+      assert.equal(privKey, PRIV_KEY);
     });
   });
 
   describe("public key", function () {
     it("should return valid public key ", function () {
-      const result = Buffer.from(keys.pubKey).toString("hex");
-      assert.equal(result, PUB_KEY);
+      assert.equal(pubKey, PUB_KEY);
     });
   });
 
   describe("address", function () {
     it("should return valid address for testnet ", function () {
-      const result = keys.address;
-      assert.equal(result, ADDRESS_TEST);
+      assert.equal(address, ADDRESS_TEST);
     });
   });
 });

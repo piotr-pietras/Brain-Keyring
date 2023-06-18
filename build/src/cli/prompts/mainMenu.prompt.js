@@ -1,5 +1,5 @@
 import inq from "inquirer";
-import { promptChooseBlockchain } from "./chooseBlockchain.prompt.js";
+import { promptLoginToWallet } from "./loginToWallet.prompt.js";
 import { printWelcome } from "../welcoming.js";
 var Choices;
 (function (Choices) {
@@ -23,7 +23,7 @@ export const promptMainMenu = (context) => {
             case Choices.EXIT:
                 break;
             case Choices.LOGIN:
-                promptChooseBlockchain(context);
+                promptLoginToWallet(context);
                 break;
         }
     });

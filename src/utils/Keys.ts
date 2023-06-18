@@ -3,16 +3,15 @@ import { secp256k1 } from "@noble/curves/secp256k1";
 import bs58 from "bs58";
 import ripemd160 from "ripemd160";
 import { Net } from "../common/blockchain.types.js";
-import { log } from "../common/log.js";
 
 const ADR_MAIN_NET_PREFIX = "00";
 const ADR_TEST_NET_PREFIX = "6F";
 
 export class Keys {
   net: Net;
-  privKey: Uint8Array;
-  pubKey: Uint8Array;
-  address: string;
+  private privKey: Uint8Array;
+  private pubKey: Uint8Array;
+  private address: string;
 
   constructor(phrase: string, net: Net) {
     this.net = net;
@@ -43,16 +42,14 @@ export class Keys {
     return bs58.encode(ripemdChecksum);
   };
 
-  sign(msg: string, privKey: Uint8Array) {
-    return secp256k1.sign(msg, Buffer.from(privKey).toString("hex"));
+  get keysHex() {
+    return {
+      privKey: Buffer.from(this.privKey).toString("hex"),
+      pubKey: Buffer.from(this.pubKey).toString("hex"),
+    };
   }
 
-  logKeys() {
-    log("\n-------------------------------------------");
-    log("| Private Key: ");
-    log("| " + Buffer.from(this.privKey).toString("hex") + "\n");
-    log("| Public Key (uncompressed): ");
-    log("| " + Buffer.from(this.pubKey).toString("hex"));
-    log("-------------------------------------------\n");
+  get addressHex() {
+    return this.address;
   }
 }

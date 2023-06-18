@@ -12,7 +12,7 @@ var ChoicesNet;
     ChoicesNet["MAIN"] = "main";
     ChoicesNet["TEST3"] = "test3";
 })(ChoicesNet || (ChoicesNet = {}));
-export const promptChooseBlockchain = (context) => {
+export const promptLoginToWallet = (context) => {
     console.clear();
     printWelcome();
     inq

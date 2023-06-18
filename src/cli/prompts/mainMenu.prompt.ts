@@ -1,6 +1,6 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
-import { promptChooseBlockchain } from "./chooseBlockchain.prompt.js";
+import { promptLoginToWallet } from "./loginToWallet.prompt.js";
 import { printWelcome } from "../welcoming.js";
 
 enum Choices {
@@ -26,7 +26,7 @@ export const promptMainMenu = (context: Context) => {
         case Choices.EXIT:
           break;
         case Choices.LOGIN:
-          promptChooseBlockchain(context);
+          promptLoginToWallet(context);
           break;
       }
     });

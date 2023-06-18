@@ -32,7 +32,7 @@ export const createTransaction = (context) => {
         log("Please wait... Block Cypher creates for you TX object to sign.");
         const { keys, net } = context.wallet;
         const txSeed = {
-            inputAddress: keys.address,
+            inputAddress: keys.addressHex,
             outputAddress: output,
             value: parseInt(value),
         };

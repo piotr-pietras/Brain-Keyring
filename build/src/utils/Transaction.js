@@ -17,14 +17,12 @@ export class Transaction {
         this.net = net;
     }
     sign(keys) {
-        const { privKey, pubKey } = keys;
+        const { privKey, pubKey } = keys.keysHex;
         const { tosign, tx } = this.txSekeleton;
         const pubkeys = [];
         const signatures = tosign.map((msg) => {
-            const pubKeyHex = Buffer.from(pubKey).toString("hex");
-            const privKeyHex = Buffer.from(privKey).toString("hex");
-            pubkeys.push(pubKeyHex);
-            const signature = secp256k1.sign(msg, privKeyHex);
+            pubkeys.push(pubKey);
+            const signature = secp256k1.sign(msg, privKey);
             return signature.toDERHex();
         });
         this.txSigned = {
@@ -56,6 +54,7 @@ export class Transaction {
         if ((_b = this.txCompleted) === null || _b === void 0 ? void 0 : _b.errors) {
             this.errors += JSON.stringify(this.txCompleted.errors);
         }
-        throw `Block Cypher responses with error:\n ${this.errors}`;
+        if (this.errors)
+            throw `Block Cypher responses with error:\n ${this.errors}`;
     }
 }

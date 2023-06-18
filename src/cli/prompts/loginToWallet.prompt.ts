@@ -14,7 +14,7 @@ enum ChoicesNet {
   TEST3 = Net.TEST3,
 }
 
-export const promptChooseBlockchain = (context: Context) => {
+export const promptLoginToWallet = (context: Context) => {
   console.clear();
   printWelcome();
 
