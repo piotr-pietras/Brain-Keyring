@@ -7,7 +7,7 @@ import {
   TXSekeleton,
   TXSigned,
 } from "./Transaction.types.js";
-import { Keys } from "./Keys.js";
+import { KeysBTC } from "./KeysBTC.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { checkBalance } from "../api/balance/checkBalance.api.js";
 
@@ -24,7 +24,7 @@ export class Transaction {
     this.net = net;
   }
 
-  sign(keys: Keys) {
+  sign(keys: KeysBTC) {
     const { privKey, pubKey } = keys.keysHex;
     const { tosign, tx } = this.txSekeleton;
     const pubkeys = [];
@@ -42,7 +42,7 @@ export class Transaction {
     };
   }
 
-  async create(keys: Keys) {
+  async create(keys: KeysBTC) {
     this.txSekeleton = await createTx(this.txSeed, this.net);
     this.errorCheck();
     await this.validateSkeleton(keys);
@@ -55,7 +55,7 @@ export class Transaction {
     return Promise.resolve();
   }
 
-  private async validateSkeleton(keys: Keys) {
+  private async validateSkeleton(keys: KeysBTC) {
     const { balance } = await checkBalance(keys.addressHex, keys.net);
     const { inputAddress, outputAddress, value } = this.txSeed;
     const { addresses, fees, outputs } = this.txSekeleton.tx;

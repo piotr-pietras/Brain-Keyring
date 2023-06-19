@@ -1,5 +1,5 @@
 import assert from "assert";
-import { Keys } from "../../src/utils/Keys.js";
+import { KeysBTC } from "../../src/utils/KeysBTC.js";
 import { Net } from "../../src/common/blockchain.types.js";
 
 const PHRASE = "test test test test test test";
@@ -11,7 +11,7 @@ const ADDRESS_TEST = "n3GgbqMvS3rYdu5VHhjDN3Cfxtobpeqsnj";
 // const ADDRESS_MAIN = "1NkjJnGwd2RHrnbsa8kqY7zM6uCttJhzxx";
 
 describe("Keys class", function () {
-  const keys = new Keys(PHRASE, Net.TEST3);
+  const keys = new KeysBTC(PHRASE, Net.TEST3);
   const { privKey, pubKey } = keys.keysHex;
   const address = keys.addressHex;
 

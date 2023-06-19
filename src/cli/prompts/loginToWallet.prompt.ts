@@ -1,7 +1,7 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
 import { Blockchains, Net } from "../../common/blockchain.types.js";
-import { Keys } from "../../utils/Keys.js";
+import { KeysBTC } from "../../utils/KeysBTC.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
 import { printWelcome } from "../printable.js";
 
@@ -48,14 +48,14 @@ export const promptLoginToWallet = (context: Context) => {
               context.wallet = {
                 blockchain: Blockchains.BTC,
                 net: Net.MAIN,
-                keys: new Keys(phrase, Net.MAIN),
+                keys: new KeysBTC(phrase, Net.MAIN),
               };
               break;
             case ChoicesNet.TEST3:
               context.wallet = {
                 blockchain: Blockchains.BTC,
                 net: Net.TEST3,
-                keys: new Keys(phrase, Net.TEST3),
+                keys: new KeysBTC(phrase, Net.TEST3),
               };
               break;
           }

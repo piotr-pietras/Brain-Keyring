@@ -1,13 +1,9 @@
 import { sha256 } from "@noble/hashes/sha256";
 import { secp256k1 } from "@noble/curves/secp256k1";
-import bs58 from "bs58";
-import ripemd160 from "ripemd160";
+import { keccak_256 } from "@noble/hashes/sha3";
 import { Net } from "../common/blockchain.types.js";
 
-const ADR_MAIN_NET_PREFIX = "00";
-const ADR_TEST_NET_PREFIX = "6F";
-
-export class Keys {
+export class KeysETH {
   net: Net;
   private privKey: Uint8Array;
   private pubKey: Uint8Array;
@@ -29,17 +25,10 @@ export class Keys {
   }
 
   private pubKeyToAddress(pubKey: Uint8Array) {
-    const prefix =
-      this.net === Net.MAIN ? ADR_MAIN_NET_PREFIX : ADR_TEST_NET_PREFIX;
-    const base = sha256(Buffer.from(pubKey));
-
-    const ripemd = new ripemd160().update(Buffer.from(base)).digest();
-    const ripemdPrefixed = Buffer.concat([Buffer.from(prefix, "hex"), ripemd]);
-
-    const checksum = Buffer.from(sha256(sha256(ripemdPrefixed)).slice(0, 4));
-    const ripemdChecksum = Buffer.concat([ripemdPrefixed, checksum]);
-
-    return bs58.encode(ripemdChecksum);
+    const droppedByte = pubKey.slice(1);
+    const hashed = keccak_256(Buffer.from(droppedByte));
+    const sliced = hashed.slice(hashed.length - 20);
+    return "0x" + Buffer.from(sliced).toString("hex");
   }
 
   get keysHex() {
