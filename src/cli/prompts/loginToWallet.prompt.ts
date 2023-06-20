@@ -11,7 +11,7 @@ enum ChoicesBlockchain {
 
 enum ChoicesNet {
   MAIN = Net.MAIN,
-  TEST3 = Net.TEST3,
+  TEST = Net.TEST,
 }
 
 export const promptLoginToWallet = (context: Context) => {
@@ -51,11 +51,11 @@ export const promptLoginToWallet = (context: Context) => {
                 keys: new KeysBTC(phrase, Net.MAIN),
               };
               break;
-            case ChoicesNet.TEST3:
+            case ChoicesNet.TEST:
               context.wallet = {
                 blockchain: Blockchains.BTC,
-                net: Net.TEST3,
-                keys: new KeysBTC(phrase, Net.TEST3),
+                net: Net.TEST,
+                keys: new KeysBTC(phrase, Net.TEST),
               };
               break;
           }

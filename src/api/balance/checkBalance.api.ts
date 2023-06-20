@@ -12,9 +12,10 @@ export const checkBalance = (
   address: string,
   net: Net
 ): Promise<BalanceRes> => {
+  const netParam = net === Net.TEST ? "test3" : "main";
   const options: https.RequestOptions = {
     ...HOST,
-    path: `/v1/btc/${net}/addrs/${address}/balance?token=${TOKEN}`,
+    path: `/v1/btc/${netParam}/addrs/${address}/balance?token=${TOKEN}`,
     method: "GET",
   };
 

@@ -11,9 +11,10 @@ export const createTx = (
     inputs: [{ addresses: [txSeed.inputAddress] }],
     outputs: [{ addresses: [txSeed.outputAddress], value: txSeed.value }],
   });
+  const netParam = net === Net.TEST ? "test3" : "main";
   const options: https.RequestOptions = {
     ...HOST,
-    path: `/v1/btc/${net}/txs/new?token=${TOKEN}`,
+    path: `/v1/btc/${netParam}/txs/new?token=${TOKEN}`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",

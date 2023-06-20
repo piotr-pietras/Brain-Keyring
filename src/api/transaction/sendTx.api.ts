@@ -5,9 +5,10 @@ import { Net } from "../../common/blockchain.types.js";
 
 export const sendTx = (txSigned: TXSigned, net: Net): Promise<TXCompleted> => {
   const toSend = JSON.stringify(txSigned);
+  const netParam = net === Net.TEST ? "test3" : "main";
   const options: https.RequestOptions = {
     ...HOST,
-    path: `/v1/btc/${net}/txs/send?token=${TOKEN}`,
+    path: `/v1/btc/${netParam}/txs/send?token=${TOKEN}`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",

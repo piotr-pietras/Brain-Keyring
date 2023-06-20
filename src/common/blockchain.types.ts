@@ -1,8 +1,9 @@
 export enum Net {
   MAIN = "main",
-  TEST3 = "test3",
+  TEST = "test",
 }
 
 export enum Blockchains {
   BTC = "btc",
+  ETH = "eth",
 }
