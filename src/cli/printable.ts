@@ -1,5 +1,5 @@
 import { log } from "../common/log.js";
-import { KeysBTC } from "../utils/KeysBTC.js";
+import { Keys } from "../utils/Keys.js";
 
 export const printWelcome = () => {
   log("Welcome to TinyBrainWallet");
@@ -14,7 +14,7 @@ export const printWelcome = () => {
   log("");
 };
 
-export const printKeys = (keys: KeysBTC) => {
+export const printKeys = (keys: Keys) => {
   const { privKey, pubKey } = keys.keysHex;
   log("\n-------------------------------------------");
   log(`| Private Key: \n| ${privKey} `);

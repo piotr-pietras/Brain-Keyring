@@ -1,9 +1,11 @@
 import { sha256 } from "@noble/hashes/sha256";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { keccak_256 } from "@noble/hashes/sha3";
-import { Net } from "../common/blockchain.types.js";
+import { Blockchains, Net } from "../common/blockchain.types.js";
+import { Keys } from "./Keys.js";
 
-export class KeysETH {
+export class KeysETH implements Keys {
+  chain = Blockchains.ETH;
   net: Net;
   private privKey: Uint8Array;
   private pubKey: Uint8Array;

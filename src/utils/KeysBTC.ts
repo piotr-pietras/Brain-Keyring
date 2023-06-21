@@ -2,12 +2,14 @@ import { sha256 } from "@noble/hashes/sha256";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import bs58 from "bs58";
 import ripemd160 from "ripemd160";
-import { Net } from "../common/blockchain.types.js";
+import { Blockchains, Net } from "../common/blockchain.types.js";
+import { Keys } from "./Keys.js";
 
 const ADR_MAIN_NET_PREFIX = "00";
 const ADR_TEST_NET_PREFIX = "6F";
 
-export class KeysBTC {
+export class KeysBTC implements Keys {
+  chain = Blockchains.BTC;
   net: Net;
   private privKey: Uint8Array;
   private pubKey: Uint8Array;

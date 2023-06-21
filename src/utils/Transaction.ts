@@ -1,31 +1,30 @@
 import { createTx } from "../api/transaction/createTx.api.js";
 import { sendTx } from "../api/transaction/sendTx.api.js";
-import { Net } from "../common/blockchain.types.js";
 import {
   TXCompleted,
   TXSeed,
   TXSekeleton,
   TXSigned,
 } from "./Transaction.types.js";
-import { KeysBTC } from "./KeysBTC.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { checkBalance } from "../api/balance/checkBalance.api.js";
+import { Keys } from "./Keys.js";
 
 export class Transaction {
-  net: Net;
   errors: string = "";
+  keys: Keys;
   txSeed: TXSeed;
   txSekeleton: TXSekeleton;
   txSigned: TXSigned;
   txCompleted: TXCompleted;
 
-  constructor(tx: TXSeed, net: Net) {
+  constructor(tx: TXSeed, keys: Keys) {
     this.txSeed = tx;
-    this.net = net;
+    this.keys = keys;
   }
 
-  sign(keys: KeysBTC) {
-    const { privKey, pubKey } = keys.keysHex;
+  sign() {
+    const { privKey, pubKey } = this.keys.keysHex;
     const { tosign, tx } = this.txSekeleton;
     const pubkeys = [];
     const signatures = tosign.map((msg) => {
@@ -42,21 +41,20 @@ export class Transaction {
     };
   }
 
-  async create(keys: KeysBTC) {
-    this.txSekeleton = await createTx(this.txSeed, this.net);
+  async create() {
+    this.txSekeleton = await createTx(this.txSeed, this.keys.net);
     this.errorCheck();
-    await this.validateSkeleton(keys);
     return Promise.resolve();
   }
 
   async send() {
-    this.txCompleted = await sendTx(this.txSigned, this.net);
+    this.txCompleted = await sendTx(this.txSigned, this.keys.net);
     this.errorCheck();
     return Promise.resolve();
   }
 
-  private async validateSkeleton(keys: KeysBTC) {
-    const { balance } = await checkBalance(keys.addressHex, keys.net);
+  async validateSkeleton() {
+    const { balance } = await checkBalance(this.keys.addressHex, this.keys.net);
     const { inputAddress, outputAddress, value } = this.txSeed;
     const { addresses, fees, outputs } = this.txSekeleton.tx;
     const to = outputs.find(({ addresses }) => addresses[0] === outputAddress);
@@ -74,6 +72,12 @@ export class Transaction {
       if (!correct)
         throw "TX skeletotn received from Block Cypher seems invalid...";
     });
+
+    return {
+      balance,
+      value,
+      fees,
+    };
   }
 
   private errorCheck() {

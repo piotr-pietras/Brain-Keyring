@@ -3,7 +3,6 @@ import { Context } from "../context.js";
 import { promptMainMenu } from "./mainMenu.prompt.js";
 import { printKeys, printWelcome } from "../printable.js";
 import { createTransaction } from "./createTransaction.prompt.js";
-import { log } from "../../common/log.js";
 
 enum Choices {
   TRANSACTION = "Make transaction",

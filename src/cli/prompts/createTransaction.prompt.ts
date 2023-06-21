@@ -26,15 +26,15 @@ export const createTransaction = (context: Context) => {
     ])
     .then(async ({ output, value }) => {
       log("Please wait... Block Cypher creates for you TX object to sign.");
-      const { keys, net } = context.wallet;
+      const { keys } = context.wallet;
       const txSeed: TXSeed = {
         inputAddress: keys.addressHex,
         outputAddress: output,
         value: parseInt(value),
       };
-      const transaction = new Transaction(txSeed, net);
+      const transaction = new Transaction(txSeed, keys);
       try {
-        await transaction.create(context.wallet.keys);
+        await transaction.create();
         context.wallet.transaction = transaction;
         promptSendTransaction(context);
       } catch (err) {
