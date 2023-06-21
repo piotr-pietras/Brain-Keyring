@@ -1,14 +1,15 @@
 import https from "https";
 import { HOST, TOKEN } from "../index.js";
 import { TXCompleted, TXSigned } from "../../utils/Transaction.types.js";
-import { Net } from "../../common/blockchain.types.js";
 
-export const sendTx = (txSigned: TXSigned, net: Net): Promise<TXCompleted> => {
+export const sendTx = (
+  txSigned: TXSigned,
+  params: [string, string]
+): Promise<TXCompleted> => {
   const toSend = JSON.stringify(txSigned);
-  const netParam = net === Net.TEST ? "test3" : "main";
   const options: https.RequestOptions = {
     ...HOST,
-    path: `/v1/btc/${netParam}/txs/send?token=${TOKEN}`,
+    path: `/v1/${params[0]}/${params[1]}/txs/send?token=${TOKEN}`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",

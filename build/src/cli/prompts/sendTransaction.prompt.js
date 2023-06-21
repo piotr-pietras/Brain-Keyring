@@ -14,16 +14,21 @@ import { log } from "../../common/log.js";
 export const promptSendTransaction = (context) => __awaiter(void 0, void 0, void 0, function* () {
     console.clear();
     printWelcome();
-    const { transaction } = context.wallet;
-    const { balance, fees, value } = yield transaction.validateSkeleton();
-    log("Your TX object was created successfully!");
-    log("Check address, value and fees TWICE!");
-    log("-------------------------------------------");
-    log(`| Current balance: ${balance}`);
-    log(`| Output: ${value}`);
-    log(`| Fees: ${fees}`);
-    log(`| Balance after transaction: ${balance - value - fees}`);
-    log("-------------------------------------------");
+    try {
+        const { transaction } = context.wallet;
+        const { balance, fees, value } = yield transaction.validateSkeleton();
+        log("Your TX object was created successfully!");
+        log("Check address, value and fees TWICE!");
+        log("-------------------------------------------");
+        log(`| Current balance: ${balance}`);
+        log(`| Output: ${value}`);
+        log(`| Fees: ${fees}`);
+        log(`| Balance after transaction: ${balance - value - fees}`);
+        log("-------------------------------------------");
+    }
+    catch (err) {
+        log(err);
+    }
     inq
         .prompt([
         {

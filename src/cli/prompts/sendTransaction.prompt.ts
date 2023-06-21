@@ -8,17 +8,21 @@ export const promptSendTransaction = async (context: Context) => {
   console.clear();
   printWelcome();
 
-  const { transaction } = context.wallet;
-  const { balance, fees, value } = await transaction.validateSkeleton();
+  try {
+    const { transaction } = context.wallet;
+    const { balance, fees, value } = await transaction.validateSkeleton();
 
-  log("Your TX object was created successfully!");
-  log("Check address, value and fees TWICE!");
-  log("-------------------------------------------");
-  log(`| Current balance: ${balance}`);
-  log(`| Output: ${value}`);
-  log(`| Fees: ${fees}`);
-  log(`| Balance after transaction: ${balance - value - fees}`);
-  log("-------------------------------------------");
+    log("Your TX object was created successfully!");
+    log("Check address, value and fees TWICE!");
+    log("-------------------------------------------");
+    log(`| Current balance: ${balance}`);
+    log(`| Output: ${value}`);
+    log(`| Fees: ${fees}`);
+    log(`| Balance after transaction: ${balance - value - fees}`);
+    log("-------------------------------------------");
+  } catch (err) {
+    log(err);
+  }
 
   inq
     .prompt<{ confirm: boolean }>([

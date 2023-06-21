@@ -9,6 +9,7 @@ import {
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { checkBalance } from "../api/balance/checkBalance.api.js";
 import { Keys } from "./Keys.js";
+import { getParams } from "../cli/params.js";
 
 export class Transaction {
   errors: string = "";
@@ -42,19 +43,19 @@ export class Transaction {
   }
 
   async create() {
-    this.txSekeleton = await createTx(this.txSeed, this.keys.net);
+    this.txSekeleton = await createTx(this.txSeed, getParams(this.keys));
     this.errorCheck();
     return Promise.resolve();
   }
 
   async send() {
-    this.txCompleted = await sendTx(this.txSigned, this.keys.net);
+    this.txCompleted = await sendTx(this.txSigned, getParams(this.keys));
     this.errorCheck();
     return Promise.resolve();
   }
 
   async validateSkeleton() {
-    const { balance } = await checkBalance(this.keys.addressHex, this.keys.net);
+    const balance = await this.keys.balance();
     const { inputAddress, outputAddress, value } = this.txSeed;
     const { addresses, fees, outputs } = this.txSekeleton.tx;
     const to = outputs.find(({ addresses }) => addresses[0] === outputAddress);

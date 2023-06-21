@@ -18,3 +18,8 @@ export const printKeys = (keys) => {
     log(`| Public Key (uncompressed): \n| ${pubKey}`);
     log("-------------------------------------------\n");
 };
+export const printBalance = (balance) => {
+    log("\n-------------------------------------------");
+    log(`| Balance Key: ${balance} `);
+    log("-------------------------------------------\n");
+};

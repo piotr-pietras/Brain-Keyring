@@ -1,9 +1,7 @@
 import https from "https";
 import { HOST, TOKEN } from "../index.js";
-import { Net } from "../../common/blockchain.types.js";
-export const checkBalance = (address, net) => {
-    const netParam = net === Net.TEST ? "test3" : "main";
-    const options = Object.assign(Object.assign({}, HOST), { path: `/v1/btc/${netParam}/addrs/${address}/balance?token=${TOKEN}`, method: "GET" });
+export const checkBalance = (address, params) => {
+    const options = Object.assign(Object.assign({}, HOST), { path: `/v1/${params[0]}/${params[1]}/addrs/${address}/balance?token=${TOKEN}`, method: "GET" });
     return new Promise((resolver, reject) => {
         const req = https.request(options, (res) => {
             let data = Buffer.from([]);

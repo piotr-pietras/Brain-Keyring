@@ -4,12 +4,14 @@ import bs58 from "bs58";
 import ripemd160 from "ripemd160";
 import { Blockchains, Net } from "../common/blockchain.types.js";
 import { Keys } from "./Keys.js";
+import { checkBalance } from "../api/balance/checkBalance.api.js";
+import { getParams } from "../cli/params.js";
 
 const ADR_MAIN_NET_PREFIX = "00";
 const ADR_TEST_NET_PREFIX = "6F";
 
 export class KeysBTC implements Keys {
-  chain = Blockchains.BTC;
+  blockchain = Blockchains.BTC;
   net: Net;
   private privKey: Uint8Array;
   private pubKey: Uint8Array;
@@ -42,6 +44,11 @@ export class KeysBTC implements Keys {
     const ripemdChecksum = Buffer.concat([ripemdPrefixed, checksum]);
 
     return bs58.encode(ripemdChecksum);
+  }
+
+  async balance() {
+    const res = await checkBalance(this.addressHex, getParams(this));
+    return res.balance;
   }
 
   get keysHex() {
