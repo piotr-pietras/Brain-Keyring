@@ -21,7 +21,7 @@ export const promptSendTransaction = async (context: Context) => {
     log(`| Balance after transaction: ${balance - value - fees}`);
     log("-------------------------------------------");
   } catch (err) {
-    log(err);
+    // promptWalletMenu(context, () => log(err));
   }
 
   inq

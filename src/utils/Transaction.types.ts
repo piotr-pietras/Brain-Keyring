@@ -10,6 +10,7 @@ interface TXPut {
 }
 export interface TXSekeleton {
   errors?: unknown[];
+  error?: unknown[];
   tx: {
     fees: number;
     addresses: string[];

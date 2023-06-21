@@ -32,7 +32,7 @@ export class KeysETH implements Keys {
     const droppedByte = pubKey.slice(1);
     const hashed = keccak_256(Buffer.from(droppedByte));
     const sliced = hashed.slice(hashed.length - 20);
-    return "0x" + Buffer.from(sliced).toString("hex");
+    return Buffer.from(sliced).toString("hex");
   }
 
   async balance() {

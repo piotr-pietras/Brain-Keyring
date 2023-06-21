@@ -7,7 +7,6 @@ import {
   TXSigned,
 } from "./Transaction.types.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
-import { checkBalance } from "../api/balance/checkBalance.api.js";
 import { Keys } from "./Keys.js";
 import { getParams } from "../cli/params.js";
 
@@ -57,18 +56,25 @@ export class Transaction {
   async validateSkeleton() {
     const balance = await this.keys.balance();
     const { inputAddress, outputAddress, value } = this.txSeed;
-    const { addresses, fees, outputs } = this.txSekeleton.tx;
-    const to = outputs.find(({ addresses }) => addresses[0] === outputAddress);
-    const back = outputs.find(({ addresses }) => addresses[0] === inputAddress);
+    const { fees } = this.txSekeleton.tx;
+    let outputs = this.txSekeleton.tx.outputs;
+
+    const to = outputs.find(({ addresses }) =>
+      addresses.find((v) => v === outputAddress)
+    );
+    outputs = outputs.filter((output) => output === to);
+    const from = outputs.find(({ addresses }) =>
+      addresses.find((v) => v === inputAddress)
+    );
+    outputs = outputs.filter((output) => output === from);
 
     [
-      addresses.length === 2,
-      !!addresses.find((v) => v === inputAddress),
-      !!addresses.find((v) => v === outputAddress),
+      !outputs.length,
       !!to,
-      !!back,
+      to.addresses.length === 1,
       to.value === value,
-      back.value === balance - value - fees,
+      from ? from.addresses.length === 1 : true,
+      from ? from.value === balance - value - fees : true,
     ].forEach((correct) => {
       if (!correct)
         throw "TX skeletotn received from Block Cypher seems invalid...";
@@ -85,8 +91,14 @@ export class Transaction {
     if (this.txSekeleton?.errors) {
       this.errors += JSON.stringify(this.txSekeleton.errors);
     }
+    if (this.txSekeleton?.error) {
+      this.errors += JSON.stringify(this.txSekeleton.error);
+    }
     if (this.txCompleted?.errors) {
       this.errors += JSON.stringify(this.txCompleted.errors);
+    }
+    if (this.txCompleted?.error) {
+      this.errors += JSON.stringify(this.txCompleted.error);
     }
     if (this.errors)
       throw `Block Cypher responses with error:\n ${this.errors}`;

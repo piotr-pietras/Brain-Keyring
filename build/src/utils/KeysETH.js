@@ -31,7 +31,7 @@ export class KeysETH {
         const droppedByte = pubKey.slice(1);
         const hashed = keccak_256(Buffer.from(droppedByte));
         const sliced = hashed.slice(hashed.length - 20);
-        return "0x" + Buffer.from(sliced).toString("hex");
+        return Buffer.from(sliced).toString("hex");
     }
     balance() {
         return __awaiter(this, void 0, void 0, function* () {

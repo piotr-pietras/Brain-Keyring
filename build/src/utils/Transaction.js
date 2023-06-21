@@ -51,17 +51,27 @@ export class Transaction {
         return __awaiter(this, void 0, void 0, function* () {
             const balance = yield this.keys.balance();
             const { inputAddress, outputAddress, value } = this.txSeed;
-            const { addresses, fees, outputs } = this.txSekeleton.tx;
-            const to = outputs.find(({ addresses }) => addresses[0] === outputAddress);
-            const back = outputs.find(({ addresses }) => addresses[0] === inputAddress);
-            [
-                addresses.length === 2,
-                !!addresses.find((v) => v === inputAddress),
-                !!addresses.find((v) => v === outputAddress),
+            const { fees } = this.txSekeleton.tx;
+            let outputs = this.txSekeleton.tx.outputs;
+            const to = outputs.find(({ addresses }) => addresses.find((v) => v === outputAddress));
+            outputs = outputs.filter((output) => output === to);
+            const from = outputs.find(({ addresses }) => addresses.find((v) => v === inputAddress));
+            outputs = outputs.filter((output) => output === from);
+            console.log([
+                !outputs.length,
                 !!to,
-                !!back,
+                to.addresses.length === 1,
                 to.value === value,
-                back.value === balance - value - fees,
+                from ? from.addresses.length === 1 : true,
+                from ? from.value === balance - value - fees : true,
+            ]);
+            [
+                !outputs.length,
+                !!to,
+                to.addresses.length === 1,
+                to.value === value,
+                from ? from.addresses.length === 1 : true,
+                from ? from.value === balance - value - fees : true,
             ].forEach((correct) => {
                 if (!correct)
                     throw "TX skeletotn received from Block Cypher seems invalid...";
@@ -74,12 +84,18 @@ export class Transaction {
         });
     }
     errorCheck() {
-        var _a, _b;
+        var _a, _b, _c, _d;
         if ((_a = this.txSekeleton) === null || _a === void 0 ? void 0 : _a.errors) {
             this.errors += JSON.stringify(this.txSekeleton.errors);
         }
-        if ((_b = this.txCompleted) === null || _b === void 0 ? void 0 : _b.errors) {
+        if ((_b = this.txSekeleton) === null || _b === void 0 ? void 0 : _b.error) {
+            this.errors += JSON.stringify(this.txSekeleton.error);
+        }
+        if ((_c = this.txCompleted) === null || _c === void 0 ? void 0 : _c.errors) {
             this.errors += JSON.stringify(this.txCompleted.errors);
+        }
+        if ((_d = this.txCompleted) === null || _d === void 0 ? void 0 : _d.error) {
+            this.errors += JSON.stringify(this.txCompleted.error);
         }
         if (this.errors)
             throw `Block Cypher responses with error:\n ${this.errors}`;

@@ -27,7 +27,7 @@ export const promptSendTransaction = (context) => __awaiter(void 0, void 0, void
         log("-------------------------------------------");
     }
     catch (err) {
-        log(err);
+        // promptWalletMenu(context, () => log(err));
     }
     inq
         .prompt([
