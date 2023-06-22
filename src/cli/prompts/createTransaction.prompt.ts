@@ -1,6 +1,6 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
-import { printWelcome } from "../printable.js";
+import { boxedLog, printWelcome } from "../printable.js";
 import { Transaction } from "../../utils/Transaction.js";
 import { TXSeed } from "../../utils/Transaction.types.js";
 import { promptSendTransaction } from "./sendTransaction.prompt.js";
@@ -38,7 +38,7 @@ export const createTransaction = (context: Context) => {
         context.wallet.transaction = transaction;
         promptSendTransaction(context);
       } catch (err) {
-        promptWalletMenu(context, () => log(err));
+        promptWalletMenu(context, () => boxedLog(err));
       }
     });
 };

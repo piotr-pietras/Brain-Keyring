@@ -1,5 +1,5 @@
 import inq from "inquirer";
-import { Blockchains, Net } from "../../common/blockchain.types.js";
+import { Net } from "../../common/blockchain.types.js";
 import { KeysBTC } from "../../utils/KeysBTC.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
 import { printWelcome } from "../printable.js";
@@ -43,15 +43,11 @@ export const promptLoginToWallet = (context) => {
                 switch (net) {
                     case ChoicesNet.MAIN:
                         context.wallet = {
-                            blockchain: Blockchains.BTC,
-                            net: Net.MAIN,
                             keys: new KeysBTC(phrase, Net.MAIN),
                         };
                         break;
                     case ChoicesNet.TEST:
                         context.wallet = {
-                            blockchain: Blockchains.BTC,
-                            net: Net.TEST,
                             keys: new KeysBTC(phrase, Net.TEST),
                         };
                         break;
@@ -61,15 +57,11 @@ export const promptLoginToWallet = (context) => {
                 switch (net) {
                     case ChoicesNet.MAIN:
                         context.wallet = {
-                            blockchain: Blockchains.ETH,
-                            net: Net.MAIN,
                             keys: new KeysETH(phrase, Net.MAIN),
                         };
                         break;
                     case ChoicesNet.TEST:
                         context.wallet = {
-                            blockchain: Blockchains.ETH,
-                            net: Net.TEST,
                             keys: new KeysETH(phrase, Net.TEST),
                         };
                         break;

@@ -3,9 +3,6 @@ import { Context } from "../context.js";
 import { promptMainMenu } from "./mainMenu.prompt.js";
 import { printBalance, printKeys, printWelcome } from "../printable.js";
 import { createTransaction } from "./createTransaction.prompt.js";
-import { checkBalance } from "../../api/balance/checkBalance.api.js";
-import { getParams } from "../params.js";
-import { log } from "../../common/log.js";
 
 enum Choices {
   TRANSACTION = "Make transaction",
@@ -19,7 +16,8 @@ export const promptWalletMenu = (context: Context, before?: () => void) => {
   printWelcome();
   before && before();
 
-  const { blockchain, net, keys } = context.wallet;
+  const { keys } = context.wallet;
+  const { blockchain, net } = keys;
   inq
     .prompt<{ wallet: Choices }>([
       {

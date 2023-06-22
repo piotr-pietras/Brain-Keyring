@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import inq from "inquirer";
-import { printWelcome } from "../printable.js";
+import { boxedLog, printWelcome } from "../printable.js";
 import { Transaction } from "../../utils/Transaction.js";
 import { promptSendTransaction } from "./sendTransaction.prompt.js";
 import { log } from "../../common/log.js";
@@ -44,7 +44,7 @@ export const createTransaction = (context) => {
             promptSendTransaction(context);
         }
         catch (err) {
-            promptWalletMenu(context, () => log(err));
+            promptWalletMenu(context, () => boxedLog(err));
         }
     }));
 };

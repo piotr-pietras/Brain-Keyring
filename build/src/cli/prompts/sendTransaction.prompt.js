@@ -8,26 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import inq from "inquirer";
-import { printWelcome } from "../printable.js";
+import { boxedLog, printTransactionInfo, printWelcome } from "../printable.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
-import { log } from "../../common/log.js";
 export const promptSendTransaction = (context) => __awaiter(void 0, void 0, void 0, function* () {
     console.clear();
     printWelcome();
     try {
         const { transaction } = context.wallet;
-        const { balance, fees, value } = yield transaction.validateSkeleton();
-        log("Your TX object was created successfully!");
-        log("Check address, value and fees TWICE!");
-        log("-------------------------------------------");
-        log(`| Current balance: ${balance}`);
-        log(`| Output: ${value}`);
-        log(`| Fees: ${fees}`);
-        log(`| Balance after transaction: ${balance - value - fees}`);
-        log("-------------------------------------------");
+        const validatedInfo = yield transaction.validateSkeleton();
+        printTransactionInfo(validatedInfo);
     }
     catch (err) {
-        // promptWalletMenu(context, () => log(err));
+        promptWalletMenu(context, () => boxedLog(err));
     }
     inq
         .prompt([
@@ -44,12 +36,12 @@ export const promptSendTransaction = (context) => __awaiter(void 0, void 0, void
                 yield context.wallet.transaction.send();
             }
             catch (err) {
-                promptWalletMenu(context, () => log(err));
+                promptWalletMenu(context, () => boxedLog(err));
             }
-            promptWalletMenu(context, () => log("Transaction signed!"));
+            promptWalletMenu(context, () => boxedLog("Transaction signed!"));
         }
         else {
-            promptWalletMenu(context, () => log("Transaction canceled"));
+            promptWalletMenu(context, () => boxedLog("Transaction canceled"));
         }
     }));
 });

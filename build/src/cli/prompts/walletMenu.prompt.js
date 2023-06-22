@@ -22,7 +22,8 @@ export const promptWalletMenu = (context, before) => {
     console.clear();
     printWelcome();
     before && before();
-    const { blockchain, net, keys } = context.wallet;
+    const { keys } = context.wallet;
+    const { blockchain, net } = keys;
     inq
         .prompt([
         {

@@ -57,14 +57,6 @@ export class Transaction {
             outputs = outputs.filter((output) => output === to);
             const from = outputs.find(({ addresses }) => addresses.find((v) => v === inputAddress));
             outputs = outputs.filter((output) => output === from);
-            console.log([
-                !outputs.length,
-                !!to,
-                to.addresses.length === 1,
-                to.value === value,
-                from ? from.addresses.length === 1 : true,
-                from ? from.value === balance - value - fees : true,
-            ]);
             [
                 !outputs.length,
                 !!to,
