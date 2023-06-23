@@ -13,7 +13,7 @@ import bs58 from "bs58";
 import ripemd160 from "ripemd160";
 import { Blockchains, Net } from "../common/blockchain.types.js";
 import { checkBalance } from "../api/balance/checkBalance.api.js";
-import { getParams } from "../cli/params.js";
+import { getParams } from "../api/params.js";
 const ADR_MAIN_NET_PREFIX = "00";
 const ADR_TEST_NET_PREFIX = "6F";
 export class KeysBTC {

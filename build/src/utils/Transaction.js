@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { createTx } from "../api/transaction/createTx.api.js";
 import { sendTx } from "../api/transaction/sendTx.api.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
-import { getParams } from "../cli/params.js";
+import { getParams } from "../api/params.js";
 export class Transaction {
     constructor(tx, keys) {
         this.errors = "";
@@ -66,7 +66,7 @@ export class Transaction {
                 from ? from.value === balance - value - fees : true,
             ].forEach((correct) => {
                 if (!correct)
-                    throw "TX skeletotn received from Block Cypher seems invalid...";
+                    throw "TX skeleton received from Block Cypher seems invalid...";
             });
             return {
                 balance,
@@ -90,6 +90,6 @@ export class Transaction {
             this.errors += JSON.stringify(this.txCompleted.error);
         }
         if (this.errors)
-            throw `Block Cypher responses with error:\n ${this.errors}`;
+            throw `Response error:\n ${this.errors}`;
     }
 }

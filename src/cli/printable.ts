@@ -43,9 +43,9 @@ export const printTransactionInfo = (info: {
   log("Your TX object was created successfully!");
   log("Check address, value and fees TWICE!");
   log("-------------------------------------------");
-  log(`Current balance: \n->${balance}`);
-  log(`Output: \n->${value}`);
-  log(`Fees: \n->${fees}`);
-  log(`Balance after transaction: \n->${balance - value - fees}`);
+  log(`Current balance: \n -> ${balance}`);
+  log(`Output: \n -> ${value}`);
+  log(`Fees: \n -> ${fees}`);
+  log(`Balance after transaction: \n -> ${balance - value - fees}`);
   log("-------------------------------------------");
 };

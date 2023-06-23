@@ -8,28 +8,54 @@ const PRIV_KEY =
 const PUB_KEY =
   "040bf654bd2cfc5c16af3c1904572b749c1db27e31318ffd232b8f7c0320a1a1505926d668fc6bf3b9d782d4e01b75e8f50670d864a46b167d4add9cceef291b32";
 const ADDRESS_TEST = "n3GgbqMvS3rYdu5VHhjDN3Cfxtobpeqsnj";
-// const ADDRESS_MAIN = "1NkjJnGwd2RHrnbsa8kqY7zM6uCttJhzxx";
+const ADDRESS_MAIN = "1NkjJnGwd2RHrnbsa8kqY7zM6uCttJhzxx";
 
-describe("Keys class", function () {
-  const keys = new KeysBTC(PHRASE, Net.TEST);
-  const { privKey, pubKey } = keys.keysHex;
-  const address = keys.addressHex;
+describe("BTC keys class", function () {
+  describe("for testnet", function () {
+    const keys = new KeysBTC(PHRASE, Net.TEST);
+    const { privKey, pubKey } = keys.keysHex;
+    const address = keys.addressHex;
 
-  describe("private key", function () {
-    it("should return valid private key ", function () {
-      assert.equal(privKey, PRIV_KEY);
+    describe("private key", function () {
+      it("should return valid private key ", function () {
+        assert.equal(privKey, PRIV_KEY);
+      });
+    });
+
+    describe("public key", function () {
+      it("should return valid public key ", function () {
+        assert.equal(pubKey, PUB_KEY);
+      });
+    });
+
+    describe("address", function () {
+      it("should return valid address for testnet ", function () {
+        assert.equal(address, ADDRESS_TEST);
+      });
     });
   });
 
-  describe("public key", function () {
-    it("should return valid public key ", function () {
-      assert.equal(pubKey, PUB_KEY);
-    });
-  });
+  describe("for mainnet", function () {
+    const keys = new KeysBTC(PHRASE, Net.MAIN);
+    const { privKey, pubKey } = keys.keysHex;
+    const address = keys.addressHex;
 
-  describe("address", function () {
-    it("should return valid address for testnet ", function () {
-      assert.equal(address, ADDRESS_TEST);
+    describe("private key", function () {
+      it("should return valid private key ", function () {
+        assert.equal(privKey, PRIV_KEY);
+      });
+    });
+
+    describe("public key", function () {
+      it("should return valid public key ", function () {
+        assert.equal(pubKey, PUB_KEY);
+      });
+    });
+
+    describe("address", function () {
+      it("should return valid address for mainnet ", function () {
+        assert.equal(address, ADDRESS_MAIN);
+      });
     });
   });
 });

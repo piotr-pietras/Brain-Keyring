@@ -8,7 +8,7 @@ import {
 } from "./Transaction.types.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { Keys } from "./Keys.js";
-import { getParams } from "../cli/params.js";
+import { getParams } from "../api/params.js";
 
 export class Transaction {
   errors: string = "";
@@ -77,7 +77,7 @@ export class Transaction {
       from ? from.value === balance - value - fees : true,
     ].forEach((correct) => {
       if (!correct)
-        throw "TX skeletotn received from Block Cypher seems invalid...";
+        throw "TX skeleton received from Block Cypher seems invalid...";
     });
 
     return {
@@ -100,7 +100,6 @@ export class Transaction {
     if (this.txCompleted?.error) {
       this.errors += JSON.stringify(this.txCompleted.error);
     }
-    if (this.errors)
-      throw `Block Cypher responses with error:\n ${this.errors}`;
+    if (this.errors) throw `Response error:\n ${this.errors}`;
   }
 }

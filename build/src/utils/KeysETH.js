@@ -12,7 +12,7 @@ import { secp256k1 } from "@noble/curves/secp256k1";
 import { keccak_256 } from "@noble/hashes/sha3";
 import { Blockchains } from "../common/blockchain.types.js";
 import { checkBalance } from "../api/balance/checkBalance.api.js";
-import { getParams } from "../cli/params.js";
+import { getParams } from "../api/params.js";
 export class KeysETH {
     constructor(phrase, net) {
         this.blockchain = Blockchains.ETH;

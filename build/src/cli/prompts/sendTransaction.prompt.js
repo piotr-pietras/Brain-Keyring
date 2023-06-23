@@ -17,31 +17,31 @@ export const promptSendTransaction = (context) => __awaiter(void 0, void 0, void
         const { transaction } = context.wallet;
         const validatedInfo = yield transaction.validateSkeleton();
         printTransactionInfo(validatedInfo);
+        inq
+            .prompt([
+            {
+                name: "confirm",
+                message: "Are you sure to sign this transaction?",
+                type: "confirm",
+            },
+        ])
+            .then(({ confirm }) => __awaiter(void 0, void 0, void 0, function* () {
+            if (confirm) {
+                try {
+                    context.wallet.transaction.sign();
+                    yield context.wallet.transaction.send();
+                }
+                catch (err) {
+                    promptWalletMenu(context, () => boxedLog(err));
+                }
+                promptWalletMenu(context, () => boxedLog("Transaction signed!"));
+            }
+            else {
+                promptWalletMenu(context, () => boxedLog("Transaction canceled"));
+            }
+        }));
     }
     catch (err) {
         promptWalletMenu(context, () => boxedLog(err));
     }
-    inq
-        .prompt([
-        {
-            name: "confirm",
-            message: "Are you sure to sign this transaction?",
-            type: "confirm",
-        },
-    ])
-        .then(({ confirm }) => __awaiter(void 0, void 0, void 0, function* () {
-        if (confirm) {
-            try {
-                context.wallet.transaction.sign();
-                yield context.wallet.transaction.send();
-            }
-            catch (err) {
-                promptWalletMenu(context, () => boxedLog(err));
-            }
-            promptWalletMenu(context, () => boxedLog("Transaction signed!"));
-        }
-        else {
-            promptWalletMenu(context, () => boxedLog("Transaction canceled"));
-        }
-    }));
 });
