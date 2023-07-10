@@ -1,7 +1,7 @@
 import nock from "nock";
 import { KeysBTC } from "../../src/utils/KeysBTC.js";
 import { Net } from "../../src/common/blockchain.types.js";
-import { HOST, TOKEN } from "../../src/api/index.js";
+import { HOST, BLOCK_CYPHER_TOKEN } from "../../src/api/index.js";
 import { Transaction } from "../../src/utils/Transaction.js";
 import { getParams } from "../../src/api/params.js";
 import assert from "assert";
@@ -32,7 +32,7 @@ describe("Transaction class", function () {
   const mocked = nock(`https://${HOST.host}`);
 
   describe("Create TX", function () {
-    const createUrl = `/v1/${params[0]}/${params[1]}/txs/new?token=${TOKEN}`;
+    const createUrl = `/v1/${params[0]}/${params[1]}/txs/new?token=${BLOCK_CYPHER_TOKEN}`;
     const transaction = new Transaction(TX_SEED, keys);
 
     mocked.post(createUrl).reply(200, { tx: {} });
@@ -79,7 +79,7 @@ describe("Transaction class", function () {
   });
 
   describe("Send TX", function () {
-    const sendUrl = `/v1/${params[0]}/${params[1]}/txs/send?token=${TOKEN}`;
+    const sendUrl = `/v1/${params[0]}/${params[1]}/txs/send?token=${BLOCK_CYPHER_TOKEN}`;
     const transaction = new Transaction(TX_SEED, keys);
     transaction.txSigned = {} as any;
 
@@ -114,7 +114,7 @@ describe("Transaction class", function () {
     const balance = TX_SEED.value * 100;
     const fees = 1;
     const paybackValue = balance - TX_SEED.value - fees;
-    const balanceUrl = `/v1/${params[0]}/${params[1]}/addrs/${address}/balance?token=${TOKEN}`;
+    const balanceUrl = `/v1/${params[0]}/${params[1]}/addrs/${address}/balance?token=${BLOCK_CYPHER_TOKEN}`;
     const transaction = new Transaction(TX_SEED, keys);
 
     mocked.get(balanceUrl).reply(200, { balance });

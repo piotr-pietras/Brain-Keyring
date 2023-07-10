@@ -1,5 +1,5 @@
 import https from "https";
-import { HOST, TOKEN } from "../index.js";
+import { HOST, BLOCK_CYPHER_TOKEN } from "../index.js";
 import { TXSeed, TXSekeleton } from "../../utils/Transaction.types.js";
 
 export const createTx = (
@@ -12,7 +12,7 @@ export const createTx = (
   });
   const options: https.RequestOptions = {
     ...HOST,
-    path: `/v1/${params[0]}/${params[1]}/txs/new?token=${TOKEN}`,
+    path: `/v1/${params[0]}/${params[1]}/txs/new?token=${BLOCK_CYPHER_TOKEN}`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",

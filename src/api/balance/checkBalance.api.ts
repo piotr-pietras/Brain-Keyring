@@ -1,5 +1,5 @@
 import https from "https";
-import { HOST, TOKEN } from "../index.js";
+import { HOST, BLOCK_CYPHER_TOKEN } from "../index.js";
 
 interface BalanceRes {
   balance: number;
@@ -13,7 +13,7 @@ export const checkBalance = (
 ): Promise<BalanceRes> => {
   const options: https.RequestOptions = {
     ...HOST,
-    path: `/v1/${params[0]}/${params[1]}/addrs/${address}/balance?token=${TOKEN}`,
+    path: `/v1/${params[0]}/${params[1]}/addrs/${address}/balance?token=${BLOCK_CYPHER_TOKEN}`,
     method: "GET",
   };
 

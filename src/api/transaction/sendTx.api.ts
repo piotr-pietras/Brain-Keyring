@@ -1,5 +1,5 @@
 import https from "https";
-import { HOST, TOKEN } from "../index.js";
+import { HOST, BLOCK_CYPHER_TOKEN } from "../index.js";
 import { TXCompleted, TXSigned } from "../../utils/Transaction.types.js";
 
 export const sendTx = (
@@ -9,7 +9,7 @@ export const sendTx = (
   const toSend = JSON.stringify(txSigned);
   const options: https.RequestOptions = {
     ...HOST,
-    path: `/v1/${params[0]}/${params[1]}/txs/send?token=${TOKEN}`,
+    path: `/v1/${params[0]}/${params[1]}/txs/send?token=${BLOCK_CYPHER_TOKEN}`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",
