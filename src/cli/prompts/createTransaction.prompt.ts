@@ -4,10 +4,10 @@ import { boxedLog, printWelcome } from "../printable.js";
 import { Transaction } from "../../utils/Transaction.js";
 import { TXSeed } from "../../utils/Transaction.types.js";
 import { promptSendTransaction } from "./sendTransaction.prompt.js";
-import { log } from "../../common/log.js";
+import { log } from "../log.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
 
-export const createTransaction = (context: Context) => {
+export const promptCreateTransaction = (context: Context) => {
   console.clear();
   printWelcome();
 

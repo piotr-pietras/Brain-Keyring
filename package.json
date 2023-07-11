@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "start": "node ./build/src/startCLI.js",
+    "start": "node ./build/src/cli",
     "build": "npx tsc",
     "test": "npx mocha build/test/**/*.js"
   },
@@ -16,7 +16,6 @@
     "@types/mocha": "10.0.1",
     "@types/node": "20.2.5",
     "@types/ripemd160": "2.0.0",
-    "dotenv": "16.1.4",
     "inquirer": "9.2.7",
     "mocha": "10.2.0",
     "nock": "13.3.1",

@@ -1,4 +1,4 @@
-import { log } from "../common/log.js";
+import { log } from "./log.js";
 import { Keys } from "../utils/Keys.js";
 
 export const boxedLog = (line: string) => {
@@ -30,7 +30,7 @@ export const printKeys = (keys: Keys) => {
 
 export const printBalance = (balance: number) => {
   log("\n-------------------------------------------");
-  log(`Balance Key: ${balance} `);
+  log(`Balance: ${balance} `);
   log("-------------------------------------------\n");
 };
 

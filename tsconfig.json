@@ -4,6 +4,7 @@
     "target": "ES6",
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "nodenext",
-    "outDir": "build"
-  },
+    "outDir": "build",
+    "resolveJsonModule": true
+  }
 }
