@@ -1,7 +1,7 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
-import { promptMainMenu } from "./mainMenu.prompt.js";
-import { printBalance, printWelcome } from "../printable.js";
+import { boxedLog, printTokenBalance, printWelcome } from "../printable.js";
+import { promptWalletMenu } from "./walletMenu.prompt.js";
 
 enum Choices {
   BALANCE = "Check balance",
@@ -19,7 +19,7 @@ export const promptTokenMenu = (context: Context, before?: () => void) => {
     .prompt<{ wallet: Choices }>([
       {
         name: "wallet",
-        message: `${context.wallet.erc20Name} => ERC20 token `,
+        message: `${erc20.contract.name} => ERC20 token `,
         type: "list",
         choices: Object.values(Choices),
       },
@@ -27,11 +27,17 @@ export const promptTokenMenu = (context: Context, before?: () => void) => {
     .then(async ({ wallet }) => {
       switch (wallet) {
         case Choices.BALANCE:
-          const balance = await erc20.balance();
-          promptTokenMenu(context, () => printBalance(balance));
+          try {
+            const balance = await erc20.balance();
+            promptTokenMenu(context, () =>
+              printTokenBalance(balance, erc20.contract.name)
+            );
+          } catch (err) {
+            // promptTokenMenu(context, () => boxedLog(err));
+          }
           break;
         case Choices.BACK:
-          promptMainMenu(context);
+          promptWalletMenu(context);
           break;
       }
     });

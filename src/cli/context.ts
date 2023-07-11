@@ -7,7 +7,6 @@ export type Context = {
     keys: Keys;
     transaction?: Transaction;
     erc20?: ERC20;
-    erc20Name?: string;
   };
 };
 

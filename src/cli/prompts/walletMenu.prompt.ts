@@ -1,9 +1,16 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
 import { promptMainMenu } from "./mainMenu.prompt.js";
-import { printBalance, printKeys, printWelcome } from "../printable.js";
+import {
+  boxedLog,
+  printBtcBalance,
+  printEthBalance,
+  printKeys,
+  printWelcome,
+} from "../printable.js";
 import { promptCreateTransaction } from "./createTransaction.prompt.js";
 import { promptChooseToken } from "./chooseToken.prompt.js";
+import { Blockchains } from "../../common/blockchain.types.js";
 
 enum Choices {
   TRANSACTION = "Make transaction",
@@ -23,13 +30,18 @@ export const promptWalletMenu = (context: Context, before?: () => void) => {
 
   const { keys } = context.wallet;
   const { blockchain, net } = keys;
+  const choices = [
+    ...(keys.blockchain === Blockchains.ETH ? Object.values(EthChoices) : []),
+    ...Object.values(Choices),
+  ];
+
   inq
     .prompt<{ wallet: Choices | EthChoices }>([
       {
         name: "wallet",
         message: `${blockchain}-${net} => address: ${keys.addressHex}`,
         type: "list",
-        choices: [...Object.values(EthChoices), ...Object.values(Choices)],
+        choices,
       },
     ])
     .then(async ({ wallet }) => {
@@ -42,8 +54,16 @@ export const promptWalletMenu = (context: Context, before?: () => void) => {
           promptCreateTransaction(context);
           break;
         case Choices.BALANCE:
-          const balance = await keys.balance();
-          promptWalletMenu(context, () => printBalance(balance));
+          try {
+            const balance = await keys.balance();
+            promptWalletMenu(context, () =>
+              keys.blockchain === Blockchains.BTC
+                ? printBtcBalance(balance)
+                : printEthBalance(balance)
+            );
+          } catch (err) {
+            promptWalletMenu(context, () => boxedLog(err));
+          }
           break;
         case Choices.KEYS:
           promptWalletMenu(context, () => printKeys(keys));

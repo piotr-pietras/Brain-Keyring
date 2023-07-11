@@ -1,5 +1,7 @@
 import { log } from "./log.js";
 import { Keys } from "../utils/Keys.js";
+import { Blockchains } from "../common/blockchain.types.js";
+import { satoshiToBtc, weiToEth } from "../common/units.js";
 
 export const boxedLog = (line: string) => {
   log("\n-------------------------------------------");
@@ -28,9 +30,21 @@ export const printKeys = (keys: Keys) => {
   log("-------------------------------------------\n");
 };
 
-export const printBalance = (balance: number) => {
+export const printEthBalance = (balance: number) => {
   log("\n-------------------------------------------");
-  log(`Balance: ${balance} `);
+  log(`Balance: ${balance} (${weiToEth(balance)} ETH)`);
+  log("-------------------------------------------\n");
+};
+
+export const printBtcBalance = (balance: number) => {
+  log("\n-------------------------------------------");
+  log(`Balance: ${balance} (${satoshiToBtc(balance)} BTC)`);
+  log("-------------------------------------------\n");
+};
+
+export const printTokenBalance = (balance: number, unit: string) => {
+  log("\n-------------------------------------------");
+  log(`Balance: ${balance} (${weiToEth(balance)} ${unit})`);
   log("-------------------------------------------\n");
 };
 
