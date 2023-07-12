@@ -2,7 +2,7 @@ import inq from "inquirer";
 import { Context } from "../context.js";
 import { boxedLog, printWelcome } from "../printable.js";
 import { Transaction } from "../../utils/Transaction.js";
-import { TXSeed } from "../../utils/Transaction.types.js";
+import { TxSeed } from "../../utils/Transaction.types.js";
 import { promptSendTransaction } from "./sendTransaction.prompt.js";
 import { log } from "../log.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
@@ -12,25 +12,23 @@ export const promptCreateTransaction = (context: Context) => {
   printWelcome();
 
   inq
-    .prompt<{ output: string; value: string }>([
+    .prompt<{ destination: string; amount: string }>([
       {
-        name: "output",
-        message: "Creating transaction \n1)Paste your output address",
+        name: "destination",
+        message: "Paste your output address",
         type: "input",
       },
       {
-        name: "value",
-        message: "How much do you want to send (in satoshi)",
+        name: "amount",
+        message: "How much do you want to send",
         type: "input",
       },
     ])
-    .then(async ({ output, value }) => {
-      log("Please wait... Block Cypher creates for you TX object to sign.");
+    .then(async ({ destination, amount }) => {
       const { keys } = context.wallet;
-      const txSeed: TXSeed = {
-        inputAddress: keys.addressHex,
-        outputAddress: output,
-        value: parseInt(value),
+      const txSeed: TxSeed = {
+        destination,
+        amount,
       };
       const transaction = new Transaction(txSeed, keys);
       try {

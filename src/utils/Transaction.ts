@@ -1,105 +1,66 @@
-import { createTx } from "../api/transaction/createTx.api.js";
-import { sendTx } from "../api/transaction/sendTx.api.js";
-import {
-  TXCompleted,
-  TXSeed,
-  TXSekeleton,
-  TXSigned,
-} from "./Transaction.types.js";
+import { TxSeed, TxUnsigned, UTXO } from "./Transaction.types.js";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { Keys } from "./Keys.js";
+import { getListOfTransactions } from "../api/transactions/getListOfTransactions.js";
 import { getParams } from "../api/params.js";
+import { createUnsignedTransaction } from "../api/transactions/createUnsignedTransaction.js";
+import { sendTransaction } from "../api/transactions/sendTransaction.js";
 
 export class Transaction {
   errors: string = "";
   keys: Keys;
-  txSeed: TXSeed;
-  txSekeleton: TXSekeleton;
-  txSigned: TXSigned;
-  txCompleted: TXCompleted;
+  txSeed: TxSeed;
+  txUsigned: TxUnsigned;
+  txSigned: any;
 
-  constructor(tx: TXSeed, keys: Keys) {
+  constructor(tx: TxSeed, keys: Keys) {
     this.txSeed = tx;
     this.keys = keys;
   }
 
-  sign() {
-    const { privKey, pubKey } = this.keys.keysHex;
-    const { tosign, tx } = this.txSekeleton;
-    const pubkeys = [];
-    const signatures = tosign.map((msg) => {
-      pubkeys.push(pubKey);
-      const signature = secp256k1.sign(msg, privKey);
-      return signature.toDERHex();
-    });
-
-    this.txSigned = {
-      tx,
-      tosign,
-      pubkeys,
-      signatures,
-    };
+  private async findUtxo() {
+    const list = await getListOfTransactions(getParams(this.keys));
+    let utxo: UTXO = { id: "", index: -1, amount: 0 };
+    list.data.forEach(({ events }) =>
+      events.forEach(({ amount, transaction_id, type, meta, decimals }) => {
+        if (utxo.id) return;
+        if (
+          type === "utxo_output" &&
+          meta.script_type === "pubkeyhash" &&
+          amount / Math.pow(10, decimals) > parseInt(this.txSeed.amount)
+        ) {
+          utxo = { id: transaction_id, index: meta.index, amount };
+        }
+      })
+    );
+    return utxo;
   }
 
   async create() {
-    this.txSekeleton = await createTx(this.txSeed, getParams(this.keys));
-    this.errorCheck();
-    return Promise.resolve();
+    const utxo = await this.findUtxo();
+    this.txUsigned = await createUnsignedTransaction(
+      this.txSeed,
+      utxo,
+      getParams(this.keys)
+    );
+    return this.txUsigned;
   }
 
+  async sign() {
+    // const signature = secp256k1.sign(msg, privKey);
+    // return signature.toDERHex();
+  }
+  //mpyWAWGZEWycXSK7ofgDtFEoYQkWV4hb6S
   async send() {
-    this.txCompleted = await sendTx(this.txSigned, getParams(this.keys));
-    this.errorCheck();
-    return Promise.resolve();
-  }
-
-  async validateSkeleton() {
-    const balance = await this.keys.balance();
-    const { inputAddress, outputAddress, value } = this.txSeed;
-    const { fees } = this.txSekeleton.tx;
-    let outputs = this.txSekeleton.tx.outputs;
-
-    const to = outputs.find(({ addresses }) =>
-      addresses.find((v) => v === outputAddress)
-    );
-    outputs = outputs.filter((output) => output === to);
-    const from = outputs.find(({ addresses }) =>
-      addresses.find((v) => v === inputAddress)
-    );
-    outputs = outputs.filter((output) => output === from);
-
-    [
-      !outputs.length,
-      !!to,
-      to.addresses.length === 1,
-      to.value === value,
-      from ? from.addresses.length === 1 : true,
-      from ? from.value === balance - value - fees : true,
-    ].forEach((correct) => {
-      if (!correct)
-        throw "TX skeleton received from Block Cypher seems invalid...";
-    });
-
-    return {
-      balance,
-      value,
-      fees,
-    };
-  }
-
-  private errorCheck() {
-    if (this.txSekeleton?.errors) {
-      this.errors += JSON.stringify(this.txSekeleton.errors);
-    }
-    if (this.txSekeleton?.error) {
-      this.errors += JSON.stringify(this.txSekeleton.error);
-    }
-    if (this.txCompleted?.errors) {
-      this.errors += JSON.stringify(this.txCompleted.errors);
-    }
-    if (this.txCompleted?.error) {
-      this.errors += JSON.stringify(this.txCompleted.error);
-    }
-    if (this.errors) throw `Response error:\n ${this.errors}`;
+    const { privKey } = this.keys.keysHex;
+    console.log(await this.findUtxo());
+    const signature = secp256k1
+      .sign(this.txUsigned.unsigned_tx, privKey)
+      .toDERHex();
+    const tx = this.txUsigned.unsigned_tx;
+    console.log(tx);
+    console.log(signature);
+    this.txSigned = await sendTransaction(tx, getParams(this.keys));
+    return this.txSigned;
   }
 }

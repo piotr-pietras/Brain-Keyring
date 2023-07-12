@@ -4,8 +4,8 @@ import bs58 from "bs58";
 import ripemd160 from "ripemd160";
 import { Blockchains, Net } from "../common/blockchain.types.js";
 import { Keys } from "./Keys.js";
-import { checkBalance } from "../api/balance/checkBalance.api.js";
 import { getParams } from "../api/params.js";
+import { getListOfBalances } from "../api/accounts/getListOfBalances.js";
 
 const ADR_MAIN_NET_PREFIX = "00";
 const ADR_TEST_NET_PREFIX = "6F";
@@ -47,8 +47,9 @@ export class KeysBTC implements Keys {
   }
 
   async balance() {
-    const res = await checkBalance(this.addressHex, getParams(this));
-    return res.balance;
+    const res = await getListOfBalances(this.addressHex, getParams(this));
+    if (res.length) return res[0].confirmed_balance;
+    return 0;
   }
 
   get keysHex() {

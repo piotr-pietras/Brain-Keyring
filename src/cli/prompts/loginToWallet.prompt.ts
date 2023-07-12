@@ -25,7 +25,7 @@ export const promptLoginToWallet = (context: Context) => {
       [
         {
           name: "blockchain",
-          message: "Login to a wallet: \n1)Choose blockchain wallet",
+          message: "1)Choose blockchain wallet",
           type: "list",
           choices: Object.values(ChoicesBlockchain),
         },

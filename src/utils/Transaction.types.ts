@@ -1,30 +1,15 @@
-export interface TXSeed {
-  inputAddress: string;
-  outputAddress: string;
-  value: number;
+export interface TxSeed {
+  destination: string;
+  amount: string;
 }
 
-interface TXPut {
-  value: number;
-  addresses: string[];
-}
-export interface TXSekeleton {
-  errors?: unknown[];
-  error?: unknown[];
-  tx: {
-    fees: number;
-    addresses: string[];
-    outputs: TXPut[];
-    inputs: TXPut[];
-  };
-  tosign: string[];
+export interface UTXO {
+  id: string;
+  index: number;
+  amount: number;
 }
 
-export interface TXSigned extends TXSekeleton {
-  pubkeys: string[];
-  signatures: string[];
-}
-
-export interface TXCompleted extends TXSekeleton {
-  tosign: [];
+export interface TxUnsigned {
+  id: string;
+  unsigned_tx: string;
 }

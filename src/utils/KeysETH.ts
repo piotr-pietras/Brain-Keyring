@@ -3,8 +3,8 @@ import { secp256k1 } from "@noble/curves/secp256k1";
 import { keccak_256 } from "@noble/hashes/sha3";
 import { Blockchains, Net } from "../common/blockchain.types.js";
 import { Keys } from "./Keys.js";
-import { checkBalance } from "../api/balance/checkBalance.api.js";
 import { getParams } from "../api/params.js";
+import { getListOfBalances } from "../api/accounts/getListOfBalances.js";
 
 export class KeysETH implements Keys {
   blockchain = Blockchains.ETH;
@@ -36,8 +36,9 @@ export class KeysETH implements Keys {
   }
 
   async balance() {
-    const res = await checkBalance(this.addressHex, getParams(this));
-    return res.balance;
+    const res = await getListOfBalances(this.addressHex, getParams(this));
+    if (res.length) return res[0].confirmed_balance;
+    return 0;
   }
 
   get keysHex() {

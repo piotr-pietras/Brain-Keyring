@@ -3,8 +3,8 @@ import { Keys } from "../utils/Keys.js";
 
 const params: { [key in Blockchains]: { [key in Net]: [string, string] } } = {
   btc: {
-    main: ["btc", "main"],
-    test: ["btc", "test3"],
+    main: ["bitcoin", "mainnet"],
+    test: ["bitcoin", "testnet"],
   },
   eth: {
     main: ["eth", "main"],
