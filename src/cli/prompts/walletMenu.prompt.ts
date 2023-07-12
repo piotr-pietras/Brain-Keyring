@@ -3,8 +3,7 @@ import { Context } from "../context.js";
 import { promptMainMenu } from "./mainMenu.prompt.js";
 import {
   boxedLog,
-  printBtcBalance,
-  printEthBalance,
+  printBalance,
   printKeys,
   printWelcome,
 } from "../printable.js";
@@ -29,7 +28,7 @@ export const promptWalletMenu = (context: Context, before?: () => void) => {
   before && before();
 
   const { keys } = context.wallet;
-  const { blockchain, net } = keys;
+  const { blockchain, net, decimals } = keys;
   const choices = [
     ...(keys.blockchain === Blockchains.ETH ? Object.values(EthChoices) : []),
     ...Object.values(Choices),
@@ -45,7 +44,6 @@ export const promptWalletMenu = (context: Context, before?: () => void) => {
       },
     ])
     .then(async ({ wallet }) => {
-      const { keys } = context.wallet;
       switch (wallet) {
         case EthChoices.ERC20:
           promptChooseToken(context);
@@ -57,9 +55,7 @@ export const promptWalletMenu = (context: Context, before?: () => void) => {
           try {
             const balance = await keys.balance();
             promptWalletMenu(context, () =>
-              keys.blockchain === Blockchains.BTC
-                ? printBtcBalance(balance)
-                : printEthBalance(balance)
+              printBalance(balance, decimals, blockchain)
             );
           } catch (err) {
             promptWalletMenu(context, () => boxedLog(err));

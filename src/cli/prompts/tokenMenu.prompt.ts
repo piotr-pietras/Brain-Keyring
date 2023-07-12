@@ -1,6 +1,6 @@
 import inq from "inquirer";
 import { Context } from "../context.js";
-import { boxedLog, printTokenBalance, printWelcome } from "../printable.js";
+import { printBalance, printWelcome } from "../printable.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
 
 enum Choices {
@@ -30,7 +30,7 @@ export const promptTokenMenu = (context: Context, before?: () => void) => {
           try {
             const balance = await erc20.balance();
             promptTokenMenu(context, () =>
-              printTokenBalance(balance, erc20.contract.name)
+              printBalance(balance, 1, erc20.contract.name)
             );
           } catch (err) {
             // promptTokenMenu(context, () => boxedLog(err));

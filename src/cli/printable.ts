@@ -1,11 +1,10 @@
-import { log } from "./log.js";
 import { Keys } from "../utils/Keys.js";
-import { Blockchains } from "../common/blockchain.types.js";
-import { satoshiToBtc, weiToEth } from "../common/units.js";
 
-export const boxedLog = (line: string) => {
+export const log = console.log;
+
+export const boxedLog = (line: any) => {
   log("\n-------------------------------------------");
-  log(`${line} `);
+  log(line);
   log("-------------------------------------------\n");
 };
 
@@ -30,21 +29,13 @@ export const printKeys = (keys: Keys) => {
   log("-------------------------------------------\n");
 };
 
-export const printEthBalance = (balance: number) => {
+export const printBalance = (
+  balance: number,
+  decimals: number,
+  name: string
+) => {
   log("\n-------------------------------------------");
-  log(`Balance: ${balance} (${weiToEth(balance)} ETH)`);
-  log("-------------------------------------------\n");
-};
-
-export const printBtcBalance = (balance: number) => {
-  log("\n-------------------------------------------");
-  log(`Balance: ${balance} (${satoshiToBtc(balance)} BTC)`);
-  log("-------------------------------------------\n");
-};
-
-export const printTokenBalance = (balance: number, unit: string) => {
-  log("\n-------------------------------------------");
-  log(`Balance: ${balance} (${weiToEth(balance)} ${unit})`);
+  log(`Balance: ${balance} (${balance / Math.pow(10, decimals)} ${name})`);
   log("-------------------------------------------\n");
 };
 
@@ -54,6 +45,7 @@ export const printTransactionInfo = (info: {
   fees: number;
 }) => {
   const { balance, value, fees } = info;
+  log("-------------------------------------------");
   log("Your TX object was created successfully!");
   log("Check address, value and fees TWICE!");
   log("-------------------------------------------");

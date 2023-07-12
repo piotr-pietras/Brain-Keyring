@@ -1,11 +1,11 @@
 import https from "https";
 import { HOST, BLOCK_CYPHER_TOKEN } from "../index.js";
-import { TXCompleted, TXSigned } from "../../utils/Transaction.types.js";
+import { TxCompleted, TxSigned } from "../../utils/Transaction.types.js";
 
 export const sendTx = (
-  txSigned: TXSigned,
+  txSigned: TxSigned,
   params: [string, string]
-): Promise<TXCompleted> => {
+): Promise<TxCompleted> => {
   const toSend = JSON.stringify(txSigned);
   const options: https.RequestOptions = {
     ...HOST,
@@ -20,7 +20,12 @@ export const sendTx = (
     const req = https.request(options, (res) => {
       let data = Buffer.from([]);
       res.on("data", (chunk) => (data = Buffer.concat([data, chunk])));
-      res.on("end", () => resolver(JSON.parse(data.toString())));
+      res.on("end", () => {
+        const json = JSON.parse(data.toString())
+        if(json?.error) reject(json.error)
+        if(json?.errors) reject(json.errors)
+        resolver(json);
+      });
     });
 
     req.on("error", (err) => reject(`Request error: \n${err}`));

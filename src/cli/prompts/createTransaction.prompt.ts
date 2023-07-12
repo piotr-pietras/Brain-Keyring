@@ -2,9 +2,8 @@ import inq from "inquirer";
 import { Context } from "../context.js";
 import { boxedLog, printWelcome } from "../printable.js";
 import { Transaction } from "../../utils/Transaction.js";
-import { TXSeed } from "../../utils/Transaction.types.js";
+import { TxSeed } from "../../utils/Transaction.types.js";
 import { promptSendTransaction } from "./sendTransaction.prompt.js";
-import { log } from "../log.js";
 import { promptWalletMenu } from "./walletMenu.prompt.js";
 
 export const promptCreateTransaction = (context: Context) => {
@@ -25,9 +24,8 @@ export const promptCreateTransaction = (context: Context) => {
       },
     ])
     .then(async ({ output, value }) => {
-      log("Please wait... Block Cypher creates for you TX object to sign.");
       const { keys } = context.wallet;
-      const txSeed: TXSeed = {
+      const txSeed: TxSeed = {
         inputAddress: keys.addressHex,
         outputAddress: output,
         value: parseInt(value),

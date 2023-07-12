@@ -1,11 +1,11 @@
 import https from "https";
 import { HOST, BLOCK_CYPHER_TOKEN } from "../index.js";
-import { TXSeed, TXSekeleton } from "../../utils/Transaction.types.js";
+import { TxSeed, TxSekeleton } from "../../utils/Transaction.types.js";
 
 export const createTx = (
-  txSeed: TXSeed,
+  txSeed: TxSeed,
   params: [string, string]
-): Promise<TXSekeleton | undefined> => {
+): Promise<TxSekeleton | undefined> => {
   const formattedTx = JSON.stringify({
     inputs: [{ addresses: [txSeed.inputAddress] }],
     outputs: [{ addresses: [txSeed.outputAddress], value: txSeed.value }],
@@ -23,7 +23,12 @@ export const createTx = (
     const req = https.request(options, (res) => {
       let data = Buffer.from([]);
       res.on("data", (chunk) => (data = Buffer.concat([data, chunk])));
-      res.on("end", () => resolver(JSON.parse(data.toString())));
+      res.on("end", () => {
+        const json = JSON.parse(data.toString())
+        if(json?.error) reject(json.error)
+        if(json?.errors) reject(json.errors)
+        resolver(json);
+      });
     });
 
     req.on("error", (err) => reject(`Request error: \n${err}`));

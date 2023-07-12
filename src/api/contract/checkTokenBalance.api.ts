@@ -25,7 +25,12 @@ export const checkTokenBalance = (
     const req = https.request(options, (res) => {
       let data = Buffer.from([]);
       res.on("data", (chunk) => (data = Buffer.concat([data, chunk])));
-      res.on("end", () => resolver(JSON.parse(data.toString())));
+      res.on("end", () => {
+        const json = JSON.parse(data.toString())
+        if(json?.error) reject(json.error)
+        if(json?.errors) reject(json.errors)
+        resolver(json);
+      });
     });
 
     req.on("error", (err) => reject(`Request error: \n${err}`));

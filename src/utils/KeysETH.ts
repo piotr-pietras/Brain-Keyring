@@ -7,6 +7,7 @@ import { checkBalance } from "../api/balance/checkBalance.api.js";
 import { getParams } from "../api/params.js";
 
 export class KeysETH implements Keys {
+  decimals = 18;
   blockchain = Blockchains.ETH;
   net: Net;
   private privKey: Uint8Array;

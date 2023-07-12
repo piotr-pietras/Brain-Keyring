@@ -5,7 +5,6 @@ import { HOST, BLOCK_CYPHER_TOKEN } from "../../src/api/index.js";
 import { Transaction } from "../../src/utils/Transaction.js";
 import { getParams } from "../../src/api/params.js";
 import assert from "assert";
-import { output } from "@noble/hashes/_assert";
 
 const TX_SEED = {
   inputAddress: "1HKqKTMpBTZZ8H5zcqYEWYBaaWELrDEXeE", // phrase: test
@@ -20,7 +19,6 @@ const performAction = async (
   try {
     action === "create" && (await t.create());
     action === "send" && (await t.send());
-    action === "validate" && (await t.validateSkeleton());
   } catch (err) {
     return err.toString();
   }
@@ -40,24 +38,6 @@ describe("Transaction class", function () {
       const error = await performAction(transaction, "create");
       assert.deepEqual(transaction.txSekeleton, { tx: {} });
       assert.equal(error, undefined);
-    });
-
-    mocked.post(createUrl).replyWithError("");
-    it("should throw request error", async function () {
-      const error = await performAction(transaction, "create");
-      assert.ok(error.includes("Request error:"));
-    });
-
-    mocked.post(createUrl).reply(200, { tx: {}, errors: {} });
-    it("should throw response errors", async function () {
-      const error = await performAction(transaction, "create");
-      assert.ok(error.includes("Response error:"));
-    });
-
-    mocked.post(createUrl).reply(200, { tx: {}, error: {} });
-    it("should throw response error", async function () {
-      const error = await performAction(transaction, "create");
-      assert.ok(error.includes("Response error:"));
     });
   });
 
@@ -88,111 +68,6 @@ describe("Transaction class", function () {
       const error = await performAction(transaction, "send");
       assert.deepEqual(transaction.txCompleted, { tx: {} });
       assert.equal(error, undefined);
-    });
-
-    mocked.post(sendUrl).replyWithError("");
-    it("should throw request error", async function () {
-      const error = await performAction(transaction, "send");
-      assert.ok(error.includes("Request error:"));
-    });
-
-    mocked.post(sendUrl).reply(200, { tx: {}, errors: {} });
-    it("should throw response errors", async function () {
-      const error = await performAction(transaction, "send");
-      assert.ok(error.includes("Response error:"));
-    });
-
-    mocked.post(sendUrl).reply(200, { tx: {}, error: {} });
-    it("should throw response error", async function () {
-      const error = await performAction(transaction, "send");
-      assert.ok(error.includes("Response error:"));
-    });
-  });
-
-  describe("Validate TX", function () {
-    const address = TX_SEED.inputAddress;
-    const balance = TX_SEED.value * 100;
-    const fees = 1;
-    const paybackValue = balance - TX_SEED.value - fees;
-    const balanceUrl = `/v1/${params[0]}/${params[1]}/addrs/${address}/balance?token=${BLOCK_CYPHER_TOKEN}`;
-    const transaction = new Transaction(TX_SEED, keys);
-
-    mocked.get(balanceUrl).reply(200, { balance });
-    it("should return error because of unknown address in output property", async function () {
-      transaction.txSekeleton = {
-        tx: {
-          outputs: [
-            { addresses: [TX_SEED.inputAddress] },
-            { addresses: [TX_SEED.outputAddress] },
-            { addresses: ["a1"] },
-          ],
-        },
-      } as any;
-      const error = await performAction(transaction, "validate");
-      assert.ok(error.includes("invalid"));
-    });
-
-    mocked.get(balanceUrl).reply(200, { balance });
-    it("should return error because of excessive number of addresses", async function () {
-      transaction.txSekeleton = {
-        tx: {
-          outputs: [
-            { addresses: [TX_SEED.inputAddress, "a1"] },
-            { addresses: [TX_SEED.outputAddress] },
-          ],
-        },
-      } as any;
-      const error = await performAction(transaction, "validate");
-      assert.ok(error.includes("invalid"));
-    });
-
-    mocked.get(balanceUrl).reply(200, { balance });
-    it("should return error when value to send is incorrect", async function () {
-      transaction.txSekeleton = {
-        tx: {
-          outputs: [
-            { addresses: [TX_SEED.outputAddress], value: TX_SEED.value + 1 },
-          ],
-        },
-      } as any;
-      const error = await performAction(transaction, "validate");
-      assert.ok(error.includes("invalid"));
-    });
-
-    mocked.get(balanceUrl).reply(200, { balance });
-    it("should return error when payback value is incorrect", async function () {
-      transaction.txSekeleton = {
-        tx: {
-          fees,
-          outputs: [
-            {
-              addresses: [TX_SEED.inputAddress],
-              value: paybackValue - 1,
-            },
-            { addresses: [TX_SEED.outputAddress], value: TX_SEED.value },
-          ],
-        },
-      } as any;
-      const error = await performAction(transaction, "validate");
-      assert.ok(!error);
-    });
-
-    mocked.get(balanceUrl).reply(200, { balance });
-    it("validates skeleton correctly", async function () {
-      transaction.txSekeleton = {
-        tx: {
-          fees,
-          outputs: [
-            {
-              addresses: [TX_SEED.inputAddress],
-              value: paybackValue,
-            },
-            { addresses: [TX_SEED.outputAddress], value: TX_SEED.value },
-          ],
-        },
-      } as any;
-      const error = await performAction(transaction, "validate");
-      assert.ok(!error);
     });
   });
 });

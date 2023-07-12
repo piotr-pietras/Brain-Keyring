@@ -11,6 +11,7 @@ const ADR_MAIN_NET_PREFIX = "00";
 const ADR_TEST_NET_PREFIX = "6F";
 
 export class KeysBTC implements Keys {
+  decimals = 8;
   blockchain = Blockchains.BTC;
   net: Net;
   private privKey: Uint8Array;
