@@ -1,2 +1,8 @@
-export const HOST = { host: "api.blockcypher.com", port: 443 };
-export const BLOCK_CYPHER_TOKEN = "da723bfd7ccd4d868d7a29f32d1e342a";
+export interface ResponseError {
+  status: number;
+  detail: string;
+}
+
+export const HOST = { host: "svc.blockdaemon.com" };
+export const BLOCK_DEAMON_TOKEN =
+  "zpka_0368d58bf7ae4dd483c69efe32a5f72d_239b7897";

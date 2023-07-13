@@ -38,20 +38,3 @@ export const printBalance = (
   log(`Balance: ${balance} (${balance / Math.pow(10, decimals)} ${name})`);
   log("-------------------------------------------\n");
 };
-
-export const printTransactionInfo = (info: {
-  balance: number;
-  value: number;
-  fees: number;
-}) => {
-  const { balance, value, fees } = info;
-  log("-------------------------------------------");
-  log("Your TX object was created successfully!");
-  log("Check address, value and fees TWICE!");
-  log("-------------------------------------------");
-  log(`Current balance: \n -> ${balance}`);
-  log(`Output: \n -> ${value}`);
-  log(`Fees: \n -> ${fees}`);
-  log(`Balance after transaction: \n -> ${balance - value - fees}`);
-  log("-------------------------------------------");
-};
